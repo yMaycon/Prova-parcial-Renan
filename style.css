@@ -1,88 +1,420 @@
-body {
+/* New Color Palette */
+:root {
+  --primary-brand: #6a05ad; /* Deep Purple */
+  --primary-light: #8e2de2; /* Lighter Purple for gradients */
+  --secondary-accent: #00bcd4; /* Cyan/Teal for highlights */
+  --success-color: #4caf50; /* Green for success */
+  --error-color: #f44336; /* Red for errors */
+  --text-dark: #2c3e50; /* Darker text */
+  --text-light: #ecf0f1; /* Light text on dark backgrounds */
+  --bg-main: #f0f2f5; /* Light grey background */
+  --bg-card: #ffffff; /* White card background */
+  --border-color: #dfe6e9; /* Light border */
+  --shadow-light: rgba(0, 0, 0, 0.08);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+}
+
+/* Base Styles */
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom right, #bfdbfe, #ddd6fe);
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  min-height: 100svh;
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  transition: background 1s ease;
+  justify-content: center;
+  color: var(--text-dark);
+  line-height: 1.6;
+  padding: 0.5vmin;
+  overflow: hidden; /* Mantém o overflow oculto para evitar scroll indesejado */
 }
 
-.container {
+/* Dynamic Background Circles */
+.background {
+  position: absolute;
   width: 100%;
-  max-width: 400px;
-  padding: 20px;
+  height: 100%;
+  background: radial-gradient(circle at 15% 25%, rgba(106, 5, 173, 0.08) 0%, transparent 40%),
+              radial-gradient(circle at 85% 75%, rgba(0, 188, 212, 0.08) 0%, transparent 40%);
+  animation: backgroundFlow 30s ease-in-out infinite alternate;
+  z-index: 0;
 }
 
+@keyframes backgroundFlow {
+  0% { transform: scale(1) translate(0, 0); opacity: 1; }
+  50% { transform: scale(1.1) translate(10px, -10px); opacity: 0.9; }
+  100% { transform: scale(1) translate(0, 0); opacity: 1; }
+}
+
+/* Card Design */
 .card {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+  background: var(--bg-card);
+  backdrop-filter: blur(15px);
+  border-radius: 25px;
+  padding: clamp(0.8rem, 3.5vmin, 2.5rem);
+  width: 98%;
+  max-width: 550px;
+  min-width: 280px;
+  box-shadow: 0 15px 35px var(--shadow-medium);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  max-height: 99svh; /* Garante que o card quase sempre caiba na tela */
+  justify-content: space-between;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 25px 50px var(--shadow-medium);
+}
+
+.card-header {
   text-align: center;
-  transition: transform 0.3s ease;
+  margin-bottom: clamp(0.8rem, 2.5vmin, 2rem);
+  flex-shrink: 0;
 }
 
 h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: clamp(1.4rem, 5.5vw, 3rem);
+  background: linear-gradient(45deg, var(--primary-brand), var(--primary-light));
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.5vmin;
+  font-weight: 800;
+  letter-spacing: -0.8px;
 }
 
-button {
+/* Removido o emoji-star pois as estrelas foram tiradas */
+/* .emoji-star {
+  font-size: 0.9em;
+  margin: 0 0.3rem;
+  vertical-align: middle;
+} */
+
+.subtitle {
+  color: #7f8c8d;
+  font-size: clamp(0.7rem, 2.5vw, 1.2rem);
+  line-height: 1.4;
+}
+
+/* NOVO: Estilos para o painel de boas-vindas e painel do jogo */
+.welcome-panel, .game-panel {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Permite que ocupem o espaço disponível no card */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    width: 100%; /* Ocupa a largura total do card */
+    padding: clamp(1rem, 4vmin, 2rem); /* Padding interno para os painéis */
+    text-align: center; /* Centraliza texto dentro dos painéis */
+}
+
+/* Game Elements (permanecem, apenas movemos para dentro de #game-panel) */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.7rem, 2.5vmin, 1.5rem);
+  flex-grow: 1;
+  justify-content: center; /* Centraliza o conteúdo verticalmente */
+  align-items: center; /* Centraliza os itens horizontalmente */
+  min-height: clamp(200px, 40svh, 450px);
+}
+
+/* Buttons */
+.btn {
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
+  max-width: 350px;
+  padding: clamp(0.7rem, 2.5vmin, 1.2rem) clamp(0.8rem, 3vmin, 1.5rem);
   border: none;
-  border-radius: 10px;
-  background-color: #6366f1;
-  color: white;
-  font-size: 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: clamp(0.8rem, 2.8vw, 1.3rem);
   cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.4rem, 1.5vmin, 0.8rem);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 5px 15px var(--shadow-light);
 }
 
-input {
+.btn-generate {
+  background: linear-gradient(45deg, var(--primary-brand), var(--primary-light));
+  color: var(--text-light);
+}
+
+.btn-verify {
+  background: var(--secondary-accent);
+  color: var(--text-light);
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 8px 20px var(--shadow-medium);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px var(--shadow-light);
+}
+
+/* Button Shine Effect */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 20%, rgba(255,255,255,0.2) 50%, transparent 80%);
+  animation: shine 2.5s infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* Numbers Display */
+.numbers-display {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.7rem, 2vmin, 1.2rem);
+  margin: clamp(0.7rem, 2vmin, 1.2rem) 0;
+  transition: opacity 0.5s ease;
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
+  max-width: 400px;
+}
+
+/* Ocultar inicialmente */
+.hidden {
+  display: none;
+  opacity: 0;
+}
+
+/* For animation, keep display: flex and control opacity */
+.hidden.animate__animated {
+    display: flex; /* Or block, or whatever is appropriate */
+    pointer-events: none; /* Disable interaction */
+}
+
+.number {
+  font-size: clamp(0.9rem, 3.8vw, 1.8rem);
+  font-weight: 700;
+  padding: clamp(0.7rem, 2.5vmin, 1.2rem);
+  background: var(--bg-main);
   border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 16px;
+  border-left: 4px solid var(--secondary-accent);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  color: var(--primary-brand);
 }
 
-#feedback {
-  margin-top: 15px;
-  font-weight: bold;
+/* Input Group */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.7rem, 2vmin, 1.2rem);
+  width: 100%;
+  max-width: 400px;
 }
 
-#sequencia {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #333;
+input[type="text"], /* Adicionado estilo para input[type="text"] */
+input[type="number"] {
+  width: 100%;
+  padding: clamp(0.7rem, 2.5vmin, 1.2rem) clamp(0.8rem, 3vmin, 1.5rem);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: clamp(0.8rem, 2.8vw, 1.3rem);
+  transition: all 0.3s ease;
+  color: var(--text-dark);
+  background-color: var(--bg-card);
+  text-align: center; /* Centraliza o texto no input */
 }
 
-/* Efeitos visuais por sequência de acertos */
-.acerto-3 {
-  background: linear-gradient(to bottom right, #a7f3d0, #6ee7b7);
+input[type="text"]::placeholder,
+input[type="number"]::placeholder {
+  color: #b2bec3;
 }
 
-.acerto-5 {
-  background: linear-gradient(to bottom right, #fcd34d, #fbbf24);
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: var(--primary-brand);
+  box-shadow: 0 0 0 4px rgba(106, 5, 173, 0.2);
+  outline: none;
+  background-color: #f8f8f8;
 }
 
-.acerto-7 {
-  background: linear-gradient(to bottom right, #f472b6, #ec4899);
-  animation: pulse 1s infinite;
+/* Feedback Message */
+.feedback-message {
+  padding: clamp(0.7rem, 2.5vmin, 1.2rem);
+  border-radius: 10px;
+  font-size: clamp(0.8rem, 3vw, 1.3rem);
+  font-weight: 600;
+  text-align: center;
+  min-height: clamp(2.8rem, 8vmin, 4rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Specific feedback colors from JS */
+.feedback-message[style*="var(--success-color)"] {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+.feedback-message[style*="var(--error-color)"] {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.feedback-message:not(:empty) {
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Flame Section */
+.flame-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.5rem, 2vmin, 1.2rem);
+  margin-top: clamp(0.8rem, 3vmin, 2rem);
+  flex-shrink: 0;
+}
+
+.flame-container {
+  width: clamp(55px, 15vmin, 100px);
+  height: clamp(55px, 15vmin, 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flame {
+  width: clamp(45px, 12vmin, 90px);
+  height: clamp(45px, 12vmin, 90px);
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  transform-origin: center bottom;
+  will-change: width, height, filter;
+}
+
+.flame::after {
+  content: '🔥';
+  position: absolute;
+  font-size: clamp(1.6rem, 10vw, 4rem);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 10px rgba(255,165,0,0.8));
+  transition: all 0.3s ease;
+}
+
+.flame-inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255, 200, 0, 0.9) 0%, rgba(255, 100, 0, 0.7) 30%, rgba(255, 0, 0, 0.4) 60%, transparent 100%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    filter: blur(8px);
+    opacity: 0.9;
+    animation: pulse 1.5s ease-in-out infinite alternate;
 }
 
 @keyframes pulse {
-  0% {
-    transform: scale(1);
+    0% { transform: scale(0.95); opacity: 0.85; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.85; }
+}
+
+.streak-counter {
+  font-weight: 700;
+  color: var(--primary-brand);
+  font-size: clamp(0.8rem, 3.5vw, 1.5rem);
+  letter-spacing: 0.5px;
+}
+
+/* Media query para telas largas/paisagem com aspect ratio */
+@media (min-aspect-ratio: 1/1) {
+  body {
+    padding: 0.2vmin;
   }
-  50% {
-    transform: scale(1.05);
+
+  .card {
+    max-width: 90vw;
+    max-height: 99vh;
+    padding: clamp(0.8rem, 3.5vh, 2.5rem);
   }
-  100% {
-    transform: scale(1);
+
+  .game-container {
+    justify-content: center;
+    flex-grow: 1;
+    min-height: clamp(180px, 40vh, 400px);
   }
+
+  /* Ajuste para o welcome-panel em paisagem */
+  .welcome-panel {
+      padding: clamp(1rem, 4vh, 2rem);
+  }
+}
+
+/* Media query para alturas muito pequenas (e largura não tão grande) */
+@media (max-height: 550px) and (max-width: 800px) {
+    .card {
+        padding: clamp(0.5rem, 2.5vmin, 1.5rem);
+        border-radius: 15px;
+    }
+    h1 {
+        font-size: clamp(1.2rem, 4.5vw, 2.5rem);
+    }
+    .subtitle {
+        font-size: clamp(0.6rem, 2vw, 1rem);
+    }
+    .btn, input[type="text"], input[type="number"], .number, .feedback-message { /* Adicionado input[type="text"] */
+        font-size: clamp(0.7rem, 2.5vw, 1.1rem);
+        padding: clamp(0.6rem, 2vmin, 1rem);
+    }
+    .game-container, .welcome-panel { /* Ajuste para welcome-panel */
+        gap: clamp(0.5rem, 1.8vmin, 1rem);
+        min-height: clamp(150px, 30vh, 300px);
+    }
+    .flame-container, .flame {
+        width: clamp(45px, 10vmin, 80px);
+        height: clamp(45px, 10vmin, 80px);
+    }
+    .flame::after {
+        font-size: clamp(1.4rem, 8vw, 3rem);
+    }
+    .streak-counter {
+        font-size: clamp(0.8rem, 3vw, 1.2rem);
+    }
+    .feedback-message {
+        min-height: clamp(2rem, 6vmin, 3rem);
+    }
 }

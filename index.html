@@ -1,27 +1,65 @@
-// index.html
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Desafio de Soma</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="card">
-        <h1>Desafio de Soma!</h1>
-        <button id="gerar">Gerar Números</button>
-        <p id="primeiro"></p>
-        <p id="segundo"></p>
-        <input id="resposta" type="number" placeholder="Qual o resultado?" />
-        <button id="verificar">Verificar</button>
-        <p id="feedback"></p>
-        <p id="sequencia"></p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Desafio de soma matemática com feedback visual interativo">
+  <title>Prova parcial do Renan</title> <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+  <div class="background"></div>
+
+  <main class="card animate__animated animate__fadeIn">
+    <div id="welcome-panel" class="welcome-panel">
+      <div class="card-header">
+        <h1>3º A - Prova parcial do Renan</h1> <p class="subtitle">Bem-vindo(a)! Digite seu nome para começar.</p> </div>
+      <div class="input-group">
+        <input type="text" id="playerName" placeholder="Seu nome" aria-label="Digite seu nome">
+        <button id="startGameBtn" class="btn btn-generate">
+          <span class="btn-icon">▶️</span>
+          Começar Prova
+        </button>
       </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
-    <script src="script.js"></script>
-  </body>
+    <div id="game-panel" class="game-panel hidden">
+      <div class="card-header">
+        <h1>3º A - Prova parcial do Renan</h1> </div>
+
+      <div class="game-container">
+        <button id="generate" class="btn btn-generate">
+          <span class="btn-icon">🎲</span>
+          Gerar Números
+        </button>
+
+        <div class="numbers-display hidden">
+          <p id="num1" class="number animate__animated"></p>
+          <p id="num2" class="number animate__animated"></p>
+        </div>
+
+        <div class="input-group">
+          <input id="answer" type="number" placeholder="Qual é a soma?" aria-label="Resposta da soma">
+          <button id="verify" class="btn btn-verify">
+            <span class="btn-icon">✅</span>
+            Verificar
+          </button>
+        </div>
+
+        <div id="feedback" class="feedback-message"></div>
+
+        <div class="flame-section">
+          <div class="flame-container">
+            <div id="flame" class="flame"></div>
+          </div>
+          <div class="streak-counter">Acertos: <span id="streak">0</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+  <script src="script.js"></script>
+</body>
 </html>
