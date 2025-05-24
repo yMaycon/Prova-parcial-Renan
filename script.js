@@ -17,20 +17,26 @@ const streakCounter = document.getElementById('streak');
 let correctSum = 0;
 let streak = 0;
 let currentPlayerName = 'Visitante'; // Nome padrão
-let isVerifying = false; // NOVA VARIÁVEL DE ESTADO: impede múltiplas verificações
+let isVerifying = false; // Impede múltiplas verificações
 const webhookUrl = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXOPE3c331zLjzBrXYJzPv589YeLSoz3Hhn0G7ZAuEb7BqLByelvoC3AKvp8IzyP'; // Sua URL do webhook do Discord
 
 // --- Sons ---
 // Se Howler.js não carregar, essas variáveis serão undefined.
 const soundCorrect = typeof Howl !== 'undefined' ? new Howl({
-    src: ['assets/correct.mp3'], // Certifique-se de ter este arquivo
+    src: ['sounds/correct.mp3'], // Certifique-se de ter este arquivo
     volume: 0.7
 }) : null;
 
 const soundWrong = typeof Howl !== 'undefined' ? new Howl({
-    src: ['assets/wrong.mp3'], // Certifique-se de ter este arquivo
+    src: ['sounds/wrong.mp3'], // Certifique-se de ter este arquivo
     volume: 0.7
 }) : null;
+
+const soundGenerate = typeof Howl !== 'undefined' ? new Howl({
+    src: ['sounds/generate.mp3'], // Certifique-se de ter este arquivo
+    volume: 0.7
+}) : null;
+
 // --- Funções do Webhook ---
 async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
     if (!webhookUrl) {
@@ -74,6 +80,7 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
 // --- Funções do Jogo ---
 
 function generateNumbers() {
+    if (soundGenerate) soundGenerate.play();
 
     // Reabilita input e botão de verificar
     answerInput.disabled = false;
@@ -122,7 +129,7 @@ function verifyAnswer() {
     answerInput.disabled = true;
     verifyBtn.disabled = true;
 
-    const userAnswer = parseInt(answerInput.value);
+    const userAnswerString = answerInput.value.trim(); // Pega o valor como string
     const num1 = parseInt(num1Display.textContent.replace('Primeiro número: ', ''));
     const num2 = parseInt(num2Display.textContent.replace('Segundo número: ', ''));
 
@@ -137,8 +144,14 @@ function verifyAnswer() {
         return;
     }
 
-    if (isNaN(userAnswer)) {
-        feedbackMessage.textContent = 'Por favor, digite um número.';
+    // Validação para permitir apenas números (incluindo negativos)
+    // Uma regex simples para verificar se a string é um número inteiro (opcionalmente com '-')
+    const isNumeric = /^-?\d+$/.test(userAnswerString);
+
+    let userAnswer;
+
+    if (!isNumeric) {
+        feedbackMessage.textContent = 'Por favor, digite um número válido.';
         feedbackMessage.style.color = 'var(--error-color)';
         feedbackMessage.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
         if (soundWrong) soundWrong.play();
@@ -146,8 +159,10 @@ function verifyAnswer() {
         answerInput.disabled = false; // Reabilita para que o usuário possa tentar novamente
         verifyBtn.disabled = false; // Reabilita para que o usuário possa tentar novamente
         return;
+    } else {
+        userAnswer = parseInt(userAnswerString); // Converte para número se for válido
     }
-
+    
     let messageTitle = '';
     let messageDescription = '';
     let messageColor = 0x6A05AD; // Cor padrão
