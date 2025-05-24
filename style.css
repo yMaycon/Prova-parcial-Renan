@@ -1,0 +1,88 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom right, #bfdbfe, #ddd6fe);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  transition: background 1s ease;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #6366f1;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+#feedback {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+#sequencia {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Efeitos visuais por sequência de acertos */
+.acerto-3 {
+  background: linear-gradient(to bottom right, #a7f3d0, #6ee7b7);
+}
+
+.acerto-5 {
+  background: linear-gradient(to bottom right, #fcd34d, #fbbf24);
+}
+
+.acerto-7 {
+  background: linear-gradient(to bottom right, #f472b6, #ec4899);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
