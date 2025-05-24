@@ -22,12 +22,17 @@ const webhookUrl = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXO
 // --- Sons ---
 // Se Howler.js não carregar, essas variáveis serão undefined.
 const soundCorrect = typeof Howl !== 'undefined' ? new Howl({
-    src: ['assets/correct.mp3'], // Certifique-se de ter este arquivo
+    src: ['sounds/correct.mp3'], // Certifique-se de ter este arquivo
     volume: 0.7
 }) : null;
 
 const soundWrong = typeof Howl !== 'undefined' ? new Howl({
-    src: ['assets/wrong.mp3'], // Certifique-se de ter este arquivo
+    src: ['sounds/wrong.mp3'], // Certifique-se de ter este arquivo
+    volume: 0.7
+}) : null;
+
+const soundGenerate = typeof Howl !== 'undefined' ? new Howl({
+    src: ['sounds/generate.mp3'], // Certifique-se de ter este arquivo
     volume: 0.7
 }) : null;
 
@@ -47,7 +52,7 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
             color: color,
             timestamp: new Date().toISOString(),
             footer: {
-                text: 'Prova Parcial do Renan'
+                text: `Prova Parcial do Renan - Jogador: ${currentPlayerName}` // Adiciona o nome do jogador no footer
             }
         }]
     };
@@ -74,6 +79,7 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
 // --- Funções do Jogo ---
 
 function generateNumbers() {
+    if (soundGenerate) soundGenerate.play();
 
     // Gerar num1 entre -1000 e 1000
     const num1 = Math.floor(Math.random() * 2001) - 1000;
@@ -108,6 +114,8 @@ function generateNumbers() {
 
 function verifyAnswer() {
     const userAnswer = parseInt(answerInput.value);
+    const num1 = parseInt(num1Display.textContent.replace('Primeiro número: ', ''));
+    const num2 = parseInt(num2Display.textContent.replace('Segundo número: ', ''));
 
     // Impedir verificação se o segundo número ainda não apareceu
     if (num2Display.textContent === '') {
@@ -125,6 +133,10 @@ function verifyAnswer() {
         return;
     }
 
+    let messageTitle = '';
+    let messageDescription = '';
+    let messageColor = 0x6A05AD; // Cor padrão
+
     if (userAnswer === correctSum) {
         streak++;
         streakCounter.textContent = streak;
@@ -133,6 +145,11 @@ function verifyAnswer() {
         feedbackMessage.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
         flame.classList.add('flame-success'); // Adiciona classe para animação
         if (soundCorrect) soundCorrect.play();
+
+        messageTitle = 'Resposta Correta!';
+        messageDescription = `O(a) jogador(a) **${currentPlayerName}** acertou a soma! (${num1} + ${num2} = ${correctSum})\nAcertos Consecutivos: **${streak}**`;
+        messageColor = 0x4CAF50; // Verde para acerto
+
     } else {
         streak = 0; // Reseta a sequência de acertos
         streakCounter.textContent = streak;
@@ -141,7 +158,21 @@ function verifyAnswer() {
         feedbackMessage.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
         flame.classList.add('flame-error'); // Adiciona classe para animação
         if (soundWrong) soundWrong.play();
+
+        messageTitle = 'Resposta Incorreta!';
+        messageDescription = `O(a) jogador(a) **${currentPlayerName}** errou a soma. A resposta para ${num1} + ${num2} era ${correctSum}, mas digitou ${userAnswer}.\nAcertos Consecutivos: **${streak}**`;
+        messageColor = 0xF44336; // Vermelho para erro
     }
+
+    // Enviar webhook APÓS cada acerto ou erro
+    sendDiscordWebhook(
+        'Renan\'s Bot',
+        {
+            title: messageTitle,
+            description: messageDescription,
+        },
+        messageColor
+    );
 
     // Remove as classes de animação após um tempo para permitir re-animação
     setTimeout(() => {
@@ -195,7 +226,7 @@ playerNameInput.addEventListener('keypress', (event) => {
     }
 });
 
-// --- Lógica para "finalizar" o jogo e enviar a pontuação ---
+// --- Lógica para "finalizar" o jogo e enviar a pontuação (Este webhook ainda permanece) ---
 window.addEventListener('beforeunload', () => {
     // Verificar se o nome do jogador foi definido (ou seja, o jogo foi iniciado)
     // E se houve pelo menos 1 acerto.
@@ -203,10 +234,10 @@ window.addEventListener('beforeunload', () => {
         sendDiscordWebhook(
             'Renan\'s Bot',
             {
-                title: 'Pontuação Final do Jogador!',
-                description: `O(a) jogador(a) **${currentPlayerName}** saiu da prova com **${streak}** acertos consecutivos.`,
+                title: 'Sessão Encerrada!',
+                description: `O(a) jogador(a) **${currentPlayerName}** encerrou a prova com **${streak}** acertos consecutivos na última jogada.`,
             },
-            0x4CAF50 // Cor verde para sucesso
+            0x6A05AD // Roxo para encerramento
         );
     }
 });
