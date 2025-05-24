@@ -17,17 +17,23 @@ const streakCounter = document.getElementById('streak');
 let correctSum = 0;
 let streak = 0;
 let currentPlayerName = 'Visitante'; // Nome padrão
+let isVerifying = false; // NOVA VARIÁVEL DE ESTADO: impede múltiplas verificações
 const webhookUrl = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXOPE3c331zLjzBrXYJzPv589YeLSoz3Hhn0G7ZAuEb7BqLByelvoC3AKvp8IzyP'; // Sua URL do webhook do Discord
 
 // --- Sons ---
 // Se Howler.js não carregar, essas variáveis serão undefined.
 const soundCorrect = typeof Howl !== 'undefined' ? new Howl({
-    src: ['assets/correct.mp3'], // Certifique-se de ter este arquivo
+    src: ['sounds/correct.mp3'], // Certifique-se de ter este arquivo
     volume: 0.7
 }) : null;
 
 const soundWrong = typeof Howl !== 'undefined' ? new Howl({
-    src: ['assets/wrong.mp3'], // Certifique-se de ter este arquivo
+    src: ['sounds/wrong.mp3'], // Certifique-se de ter este arquivo
+    volume: 0.7
+}) : null;
+
+const soundGenerate = typeof Howl !== 'undefined' ? new Howl({
+    src: ['sounds/generate.mp3'], // Certifique-se de ter este arquivo
     volume: 0.7
 }) : null;
 
@@ -74,6 +80,13 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
 // --- Funções do Jogo ---
 
 function generateNumbers() {
+    if (soundGenerate) soundGenerate.play();
+
+    // Reabilita input e botão de verificar
+    answerInput.disabled = false;
+    verifyBtn.disabled = false;
+    isVerifying = false; // Reseta o estado de verificação
+
     // Gerar num1 entre -1000 e 1000
     const num1 = Math.floor(Math.random() * 2001) - 1000;
     // Gerar num2 entre -1000 e 1000
@@ -106,6 +119,16 @@ function generateNumbers() {
 }
 
 function verifyAnswer() {
+    // Se já estiver verificando, sai da função
+    if (isVerifying) {
+        return;
+    }
+    isVerifying = true; // Define o estado como "verificando"
+
+    // Desabilita input e botão para evitar múltiplas verificações
+    answerInput.disabled = true;
+    verifyBtn.disabled = true;
+
     const userAnswer = parseInt(answerInput.value);
     const num1 = parseInt(num1Display.textContent.replace('Primeiro número: ', ''));
     const num2 = parseInt(num2Display.textContent.replace('Segundo número: ', ''));
@@ -115,6 +138,9 @@ function verifyAnswer() {
         feedbackMessage.textContent = 'Aguarde o segundo número aparecer!';
         feedbackMessage.style.color = 'var(--error-color)';
         feedbackMessage.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
+        isVerifying = false; // Libera o estado para permitir nova tentativa
+        answerInput.disabled = false; // Reabilita para que o usuário possa tentar novamente
+        verifyBtn.disabled = false; // Reabilita para que o usuário possa tentar novamente
         return;
     }
 
@@ -123,6 +149,9 @@ function verifyAnswer() {
         feedbackMessage.style.color = 'var(--error-color)';
         feedbackMessage.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
         if (soundWrong) soundWrong.play();
+        isVerifying = false; // Libera o estado para permitir nova tentativa
+        answerInput.disabled = false; // Reabilita para que o usuário possa tentar novamente
+        verifyBtn.disabled = false; // Reabilita para que o usuário possa tentar novamente
         return;
     }
 
@@ -173,6 +202,7 @@ function verifyAnswer() {
     }, 500);
 
     // Gera novos números automaticamente após verificar a resposta
+    // A reabilitação dos campos é feita dentro de generateNumbers
     setTimeout(generateNumbers, 1500); // 1.5 segundos para o usuário ver o feedback
 }
 
@@ -207,7 +237,7 @@ verifyBtn.addEventListener('click', verifyAnswer);
 
 // Permitir verificar com a tecla Enter no input da resposta
 answerInput.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && !isVerifying) { // Adiciona a checagem de estado
         verifyAnswer();
     }
 });
