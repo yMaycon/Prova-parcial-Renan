@@ -22,17 +22,12 @@ const webhookUrl = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXO
 // --- Sons ---
 // Se Howler.js não carregar, essas variáveis serão undefined.
 const soundCorrect = typeof Howl !== 'undefined' ? new Howl({
-    src: ['sounds/correct.mp3'], // Certifique-se de ter este arquivo
+    src: ['assets/correct.mp3'], // Certifique-se de ter este arquivo
     volume: 0.7
 }) : null;
 
 const soundWrong = typeof Howl !== 'undefined' ? new Howl({
-    src: ['sounds/wrong.mp3'], // Certifique-se de ter este arquivo
-    volume: 0.7
-}) : null;
-
-const soundGenerate = typeof Howl !== 'undefined' ? new Howl({
-    src: ['sounds/generate.mp3'], // Certifique-se de ter este arquivo
+    src: ['assets/wrong.mp3'], // Certifique-se de ter este arquivo
     volume: 0.7
 }) : null;
 
@@ -79,8 +74,6 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
 // --- Funções do Jogo ---
 
 function generateNumbers() {
-    if (soundGenerate) soundGenerate.play();
-
     // Gerar num1 entre -1000 e 1000
     const num1 = Math.floor(Math.random() * 2001) - 1000;
     // Gerar num2 entre -1000 e 1000
