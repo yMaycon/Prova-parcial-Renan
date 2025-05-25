@@ -23,17 +23,12 @@ const webhookUrl = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXO
 // --- Sons ---
 // Se Howler.js não carregar, essas variáveis serão undefined.
 const soundCorrect = typeof Howl !== 'undefined' ? new Howl({
-    src: ['sounds/correct.mp3'], // Certifique-se de ter este arquivo
+    src: ['assets/correct.mp3'], // Certifique-se de ter este arquivo
     volume: 0.7
 }) : null;
 
 const soundWrong = typeof Howl !== 'undefined' ? new Howl({
-    src: ['sounds/wrong.mp3'], // Certifique-se de ter este arquivo
-    volume: 0.7
-}) : null;
-
-const soundGenerate = typeof Howl !== 'undefined' ? new Howl({
-    src: ['sounds/generate.mp3'], // Certifique-se de ter este arquivo
+    src: ['assets/wrong.mp3'], // Certifique-se de ter este arquivo
     volume: 0.7
 }) : null;
 
