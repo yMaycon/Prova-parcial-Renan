@@ -55,8 +55,6 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
 
 // Gerar números
 function generateNumbers() {
-    if (soundGenerate) soundGenerate.play();
-
     answerInput.disabled = false;
     verifyBtn.disabled = false;
     isVerifying = false;
