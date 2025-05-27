@@ -1,65 +1,17 @@
-/* Paleta de Cores - Tema Claro (Verde Aprimorado) */
+/* New Color Palette */
 :root {
-  --primary-brand: #2E7D32; /* Verde Escuro vibrante */
-  --primary-light: #4CAF50; /* Verde Médio */
-  --secondary-accent: #66BB6A; /* Verde Claro para destaques */
-  --success-color: #4CAF50; /* Verde para sucesso */
-  --error-color: #D32F2F; /* Vermelho mais forte para erros */
-  --text-dark: #212121; /* Texto muito escuro */
-  --text-light: #ffffff; /* Texto claro */
-  --bg-main: #E8F5E9; /* Verde muito claro para fundo principal */
-  --bg-card: #ffffff; /* Fundo do card branco */
-  --border-color: #A5D6A7; /* Borda verde clara */
+  --primary-brand: #6a05ad; /* Deep Purple */
+  --primary-light: #8e2de2; /* Lighter Purple for gradients */
+  --secondary-accent: #00bcd4; /* Cyan/Teal for highlights */
+  --success-color: #4caf50; /* Green for success */
+  --error-color: #f44336; /* Red for errors */
+  --text-dark: #2c3e50; /* Darker text */
+  --text-light: #ecf0f1; /* Light text on dark backgrounds */
+  --bg-main: #f0f2f5; /* Light grey background */
+  --bg-card: #ffffff; /* White card background */
+  --border-color: #dfe6e9; /* Light border */
   --shadow-light: rgba(0, 0, 0, 0.08);
   --shadow-medium: rgba(0, 0, 0, 0.15);
-  --bg-gradient-start: #E0F2F7; /* Gradiente de fundo claro */
-  --bg-gradient-end: #BBDEFB;
-  --bg-radial-circle1-color: rgba(76, 175, 80, 0.08); /* Tinta verde */
-  --bg-radial-circle2-color: rgba(33, 150, 243, 0.08); /* Tinta azul clara */
-
-  /* Cores do Placar de Líderes - Tema Claro */
-  --leaderboard-1st-bg: #FFD700; /* Ouro */
-  --leaderboard-1st-text: #212121;
-  --leaderboard-2nd-bg: #C0C0C0; /* Prata */
-  --leaderboard-2nd-text: #212121;
-  --leaderboard-3rd-bg: #CD7F32; /* Bronze */
-  --leaderboard-3rd-text: #212121;
-  --leaderboard-default-bg: #ffffff; /* Branco */
-  --leaderboard-default-text: #2E7D32; /* Verde para texto */
-  --leaderboard-highlight-bg: #DCEDC8; /* Verde muito claro para destaque */
-  --leaderboard-highlight-text: #212121;
-}
-
-/* Paleta de Cores - Tema Escuro (Roxo/Azul Escuro Harmonizado) */
-body.dark-theme {
-  --primary-brand: #7B1FA2; /* Roxo vibrante */
-  --primary-light: #9C27B0; /* Roxo médio */
-  --secondary-accent: #00BCD4; /* Ciano para destaques (mantido, pois combina bem) */
-  --success-color: #81C784; /* Verde mais claro para sucesso */
-  --error-color: #EF5350; /* Vermelho mais suave para erros */
-  --text-dark: #E0E0E0; /* Texto claro para fundo escuro */
-  --text-light: #212121; /* Texto escuro para elementos claros */
-  --bg-main: #263238; /* Azul-cinza muito escuro para fundo principal */
-  --bg-card: #37474F; /* Azul-cinza escuro para card */
-  --border-color: #546E7A; /* Borda cinza azulada */
-  --shadow-light: rgba(0, 0, 0, 0.3);
-  --shadow-medium: rgba(0, 0, 0, 0.5);
-  --bg-gradient-start: #263238; /* Gradiente de fundo escuro */
-  --bg-gradient-end: #455A64;
-  --bg-radial-circle1-color: rgba(123, 31, 162, 0.08); /* Tinta roxa */
-  --bg-radial-circle2-color: rgba(0, 188, 212, 0.08); /* Tinta ciano */
-
-  /* Cores do Placar de Líderes - Tema Escuro */
-  --leaderboard-1st-bg: #FFD700; /* Ouro */
-  --leaderboard-1st-text: #212121;
-  --leaderboard-2nd-bg: #C0C0C0; /* Prata */
-  --leaderboard-2nd-text: #212121;
-  --leaderboard-3rd-bg: #CD7F32; /* Bronze */
-  --leaderboard-3rd-text: #212121;
-  --leaderboard-default-bg: #455A64; /* Azul-cinza escuro */
-  --leaderboard-default-text: #E0E0E0; /* Texto claro */
-  --leaderboard-highlight-bg: #546E7A; /* Azul-cinza mais claro para destaque */
-  --leaderboard-highlight-text: #E0E0E0;
 }
 
 /* Base Styles */
@@ -72,15 +24,14 @@ body.dark-theme {
 body {
   font-family: 'Inter', sans-serif;
   min-height: 100svh;
-  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-dark);
   line-height: 1.6;
   padding: 0.5vmin;
-  overflow: hidden;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  overflow: hidden; /* Mantém o overflow oculto para evitar scroll indesejado */
 }
 
 /* Dynamic Background Circles */
@@ -88,8 +39,8 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 15% 25%, var(--bg-radial-circle1-color) 0%, transparent 40%),
-              radial-gradient(circle at 85% 75%, var(--bg-radial-circle2-color) 0%, transparent 40%);
+  background: radial-gradient(circle at 15% 25%, rgba(106, 5, 173, 0.08) 0%, transparent 40%),
+              radial-gradient(circle at 85% 75%, rgba(0, 188, 212, 0.08) 0%, transparent 40%);
   animation: backgroundFlow 30s ease-in-out infinite alternate;
   z-index: 0;
 }
@@ -113,13 +64,13 @@ body {
   min-width: 280px;
   box-shadow: 0 15px 35px var(--shadow-medium);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease, background-color 0.5s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease;
   overflow: hidden;
 
   display: flex;
   flex-direction: column;
   height: auto;
-  max-height: 99svh;
+  max-height: 99svh; /* Garante que o card quase sempre caiba na tela */
   justify-content: space-between;
 }
 
@@ -142,50 +93,41 @@ h1 {
   margin-bottom: 0.5vmin;
   font-weight: 800;
   letter-spacing: -0.8px;
-  transition: background 0.5s ease;
 }
+
+/* Removido o emoji-star pois as estrelas foram tiradas */
+/* .emoji-star {
+  font-size: 0.9em;
+  margin: 0 0.3rem;
+  vertical-align: middle;
+} */
 
 .subtitle {
-  color: var(--text-dark);
+  color: #7f8c8d;
   font-size: clamp(0.7rem, 2.5vw, 1.2rem);
   line-height: 1.4;
-  transition: color 0.5s ease;
 }
 
-/* Painéis */
-.welcome-panel, .game-panel, .leaderboard-panel, .change-name-panel {
+/* NOVO: Estilos para o painel de boas-vindas e painel do jogo */
+.welcome-panel, .game-panel {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: clamp(1rem, 4vmin, 2rem);
-    text-align: center;
-    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s ease;
-    position: absolute; /* Para que todos os painéis ocupem o mesmo espaço */
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
+    flex-grow: 1; /* Permite que ocupem o espaço disponível no card */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    width: 100%; /* Ocupa a largura total do card */
+    padding: clamp(1rem, 4vmin, 2rem); /* Padding interno para os painéis */
+    text-align: center; /* Centraliza texto dentro dos painéis */
 }
 
-/* Classe para ocultar elementos com transição */
-.is-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateY(10px); /* Pequeno deslocamento ao esconder */
-}
-
-
+/* Game Elements (permanecem, apenas movemos para dentro de #game-panel) */
 .game-container {
   display: flex;
   flex-direction: column;
   gap: clamp(0.7rem, 2.5vmin, 1.5rem);
   flex-grow: 1;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* Centraliza o conteúdo verticalmente */
+  align-items: center; /* Centraliza os itens horizontalmente */
   min-height: clamp(200px, 40svh, 450px);
 }
 
@@ -199,7 +141,7 @@ h1 {
   font-weight: 700;
   font-size: clamp(0.8rem, 2.8vw, 1.3rem);
   cursor: pointer;
-  transition: all 0.3s ease, transform 0.2s ease-out, background 0.5s ease, color 0.5s ease;
+  transition: all 0.3s ease, transform 0.2s ease-out;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -265,11 +207,16 @@ h1 {
   max-width: 400px;
 }
 
-.countdown-message {
-  color: var(--text-dark);
-  font-size: clamp(0.8rem, 2.5vw, 1.1rem);
-  min-height: 1.5em;
-  transition: color 0.5s ease;
+/* Ocultar inicialmente */
+.hidden {
+  display: none;
+  opacity: 0;
+}
+
+/* For animation, keep display: flex and control opacity */
+.hidden.animate__animated {
+    display: flex; /* Or block, or whatever is appropriate */
+    pointer-events: none; /* Disable interaction */
 }
 
 .number {
@@ -281,7 +228,6 @@ h1 {
   border-left: 4px solid var(--secondary-accent);
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
   color: var(--primary-brand);
-  transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
 }
 
 /* Input Group */
@@ -293,7 +239,7 @@ h1 {
   max-width: 400px;
 }
 
-input[type="text"],
+input[type="text"], /* Adicionado estilo para input[type="text"] */
 input[type="number"] {
   width: 100%;
   padding: clamp(0.7rem, 2.5vmin, 1.2rem) clamp(0.8rem, 3vmin, 1.5rem);
@@ -303,22 +249,20 @@ input[type="number"] {
   transition: all 0.3s ease;
   color: var(--text-dark);
   background-color: var(--bg-card);
-  text-align: center;
-  transition: border-color 0.5s ease, box-shadow 0.5s ease, background-color 0.5s ease, color 0.5s ease;
+  text-align: center; /* Centraliza o texto no input */
 }
 
 input[type="text"]::placeholder,
 input[type="number"]::placeholder {
-  color: var(--text-dark);
-  opacity: 0.7;
+  color: #b2bec3;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus {
   border-color: var(--primary-brand);
-  box-shadow: 0 0 0 4px rgba(var(--primary-brand-rgb, 46, 125, 50), 0.2); /* Usa RGB para a sombra */
+  box-shadow: 0 0 0 4px rgba(106, 5, 173, 0.2);
   outline: none;
-  background-color: var(--bg-main);
+  background-color: #f8f8f8;
 }
 
 /* Feedback Message */
@@ -332,24 +276,18 @@ input[type="number"]:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease, background-color 0.5s ease, color 0.5s ease;
+  transition: all 0.3s ease;
   width: 100%;
   max-width: 400px;
 }
 
-.feedback-message.success {
-  color: var(--success-color);
+/* Specific feedback colors from JS */
+.feedback-message[style*="var(--success-color)"] {
   background-color: rgba(76, 175, 80, 0.1);
 }
-.feedback-message.error {
-  color: var(--error-color);
-  background-color: rgba(211, 47, 47, 0.1);
+.feedback-message[style*="var(--error-color)"] {
+  background-color: rgba(244, 67, 54, 0.1);
 }
-.feedback-message.info {
-  color: var(--primary-brand);
-  background-color: var(--bg-radial-circle1-color);
-}
-
 
 .feedback-message:not(:empty) {
   animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -385,7 +323,6 @@ input[type="number"]:focus {
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
   transform-origin: center bottom;
   will-change: width, height, filter;
-  overflow: hidden;
 }
 
 .flame::after {
@@ -397,7 +334,6 @@ input[type="number"]:focus {
   transform: translate(-50%, -50%);
   filter: drop-shadow(0 0 10px rgba(255,165,0,0.8));
   transition: all 0.3s ease;
-  z-index: 2;
 }
 
 .flame-inner {
@@ -409,20 +345,7 @@ input[type="number"]:focus {
     filter: blur(8px);
     opacity: 0.9;
     animation: pulse 1.5s ease-in-out infinite alternate;
-    z-index: 1;
-    transition: background 0.5s ease, filter 0.5s ease;
 }
-
-.flame.flame-success .flame-inner {
-  filter: blur(5px) brightness(1.2);
-  background: radial-gradient(circle at center, rgba(144, 238, 144, 0.9) 0%, rgba(60, 179, 113, 0.7) 50%, transparent 100%);
-}
-
-.flame.flame-error .flame-inner {
-  filter: blur(5px) grayscale(0.8);
-  background: radial-gradient(circle at center, rgba(255, 100, 0, 0.7) 0%, rgba(255, 0, 0, 0.5) 50%, transparent 100%);
-}
-
 
 @keyframes pulse {
     0% { transform: scale(0.95); opacity: 0.85; }
@@ -435,311 +358,10 @@ input[type="number"]:focus {
   color: var(--primary-brand);
   font-size: clamp(0.8rem, 3.5vw, 1.5rem);
   letter-spacing: 0.5px;
-  transition: color 0.5s ease;
-}
-
-/* Leaderboard Styles */
-.leaderboard-panel {
-    align-items: flex-start;
-    justify-content: flex-start;
-    overflow-y: auto; /* Adiciona scroll para o placar */
-    padding-bottom: 2rem; /* Espaço para o final do scroll */
-}
-
-.leaderboard-list {
-    list-style: none;
-    padding: 0;
-    width: 100%;
-    max-width: 400px;
-    margin-top: 1.5rem;
-    margin-bottom: 2rem;
-    position: relative; /* Para o item flutuante */
-}
-
-.leaderboard-list li {
-    padding: 0.8rem 1.2rem;
-    margin-bottom: 0.5rem;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: clamp(0.9rem, 3vw, 1.2rem);
-    font-weight: 500;
-    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
-    border-left: 4px solid transparent; /* Padrão, será sobrescrito */
-}
-
-/* Cores específicas para o Placar de Líderes */
-.leaderboard-list li.rank-1 {
-    background-color: var(--leaderboard-1st-bg);
-    color: var(--leaderboard-1st-text);
-    font-weight: 700;
-    border-left-color: var(--primary-brand);
-}
-
-.leaderboard-list li.rank-2 {
-    background-color: var(--leaderboard-2nd-bg);
-    color: var(--leaderboard-2nd-text);
-    font-weight: 600;
-    border-left-color: var(--secondary-accent);
-}
-
-.leaderboard-list li.rank-3 {
-    background-color: var(--leaderboard-3rd-bg);
-    color: var(--leaderboard-3rd-text);
-    font-weight: 600;
-    border-left-color: var(--error-color); /* Pode ser outra cor, mas mantém o padrão */
-}
-
-.leaderboard-list li:nth-child(n+4) {
-    background-color: var(--leaderboard-default-bg);
-    color: var(--leaderboard-default-text);
-    border-left-color: var(--border-color);
-}
-
-/* Ranking flutuante */
-.leaderboard-list li.highlight-player {
-    position: sticky; /* ou fixed, dependendo do efeito desejado */
-    bottom: 0; /* Fixa no fundo do container scrollável */
-    background-color: var(--leaderboard-highlight-bg);
-    color: var(--leaderboard-highlight-text);
-    border: 2px solid var(--primary-brand);
-    box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
-    z-index: 10;
-    animation: pulseHighlight 1.5s infinite alternate;
-}
-
-@keyframes pulseHighlight {
-  0% { transform: scale(1); opacity: 0.9; }
-  100% { transform: scale(1.01); opacity: 1; }
-}
-
-
-.mt-2 {
-  margin-top: 1.2rem;
-}
-
-/* Theme Toggle Button */
-.theme-toggle-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: var(--secondary-accent); /* Cor base para o botão */
-  color: var(--text-light);
-  border: none;
-  border-radius: 50%;
-  width: 55px;
-  height: 55px;
-  font-size: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, transform 0.2s ease-out, box-shadow 0.3s ease, filter 0.3s ease;
-  z-index: 100;
-  filter: drop-shadow(0 0 8px rgba(23, 162, 184, 0.5)); /* Brilho inicial */
-}
-
-body.dark-theme .theme-toggle-btn {
-    background-color: var(--primary-brand);
-    filter: drop-shadow(0 0 8px rgba(123, 31, 162, 0.5)); /* Brilho ajustado para o tema escuro */
-}
-
-.theme-toggle-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-}
-
-.theme-toggle-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Menu Toggle Button (Novo) - Modificado */
-.menu-toggle-btn {
-  position: fixed;
-  top: 20px; /* Posição no topo */
-  left: 20px;
-  background-color: var(--primary-brand);
-  color: var(--text-light);
-  border: none;
-  border-radius: 50%;
-  width: 55px;
-  height: 55px;
-  font-size: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, transform 0.2s ease-out, box-shadow 0.3s ease, filter 0.3s ease;
-  z-index: 100;
-  filter: drop-shadow(0 0 8px rgba(46, 125, 50, 0.5));
-}
-
-body.dark-theme .menu-toggle-btn {
-  background-color: var(--primary-brand);
-  filter: drop-shadow(0 0 8px rgba(123, 31, 162, 0.5));
-}
-
-.menu-toggle-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-}
-
-/* Side Menu (Novo) - Modificado */
-.side-menu {
-  position: fixed;
-  top: 0;
-  left: 0; /* Inicialmente visível */
-  width: 280px; /* Largura do menu */
-  height: 100%;
-  background-color: var(--bg-card);
-  box-shadow: 5px 0 15px var(--shadow-medium);
-  z-index: 200;
-  transition: transform 0.3s ease-out;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  border-right: 1px solid var(--border-color);
-  transform: translateX(-100%); /* Esconde inicialmente */
-}
-
-.side-menu.is-open {
-  transform: translateX(0); /* Abre o menu */
-}
-
-.close-menu-btn {
-    align-self: flex-end;
-    background: none;
-    border: none;
-    font-size: 28px;
-    color: var(--text-dark);
-    cursor: pointer;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    transition: color 0.3s ease;
-}
-
-.close-menu-btn:hover {
-    color: var(--error-color);
-}
-
-.menu-nav ul {
-  list-style: none;
-  padding: 0;
-}
-
-
-.menu-nav-item {
-  background-color: transparent;
-  border: none;
-  width: 100%;
-  text-align: left;
-  padding: 1rem 1.5rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-dark);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  border-radius: 8px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.menu-nav-item i {
-  font-size: 1.3rem;
-  color: var(--primary-brand);
-  transition: color 0.3s ease;
-}
-
-.menu-nav-item:hover {
-  background-color: var(--bg-main);
-  color: var(--primary-brand);
-}
-
-.menu-nav-item:hover i {
-  color: var(--primary-light);
-}
-
-/* Botão do menu sempre acima da barra lateral */
-#menu-toggle.menu-toggle-btn {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1101; /* maior que o z-index do menu lateral */
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  border: none;
-  padding: 12px;
-  cursor: pointer;
-}
-
-/* Barra lateral com z-index menor */
-#side-menu.side-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 260px;
-  height: 100vh;
-  background: var(--sidebar-bg, #29284a);
-  color: var(--sidebar-text, #fff);
-  z-index: 1100;
-  transition: transform 0.3s cubic-bezier(.77,0,.18,1);
-  transform: translateX(-100%);
-  box-shadow: 2px 0 8px rgba(44, 41, 74, 0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-#side-menu.is-open {
-  transform: translateX(0);
-}
-
-/* Botão do menu na borda direita da barra lateral */
-.menu-toggle-btn {
-  position: absolute;
-  top: 16px;
-  right: -48px; /* Fora da barra, mas colado à borda */
-  z-index: 1200;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-  border: none;
-  padding: 14px;
-  cursor: pointer;
-  color: #4b2994;
-  font-size: 1.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: right 0.3s cubic-bezier(.77,0,.18,1), background 0.2s;
-}
-.menu-toggle-btn:focus {
-  outline: 2px solid #4b2994;
-}
-.menu-toggle-btn:hover {
-  background: #f0eefb;
-}
-
-/* Corrigir o main para não ficar no meio vertical da tela */
-main.card.animate__animated.animate__fadeIn {
-  position: relative;
-  margin: 40px auto 0 auto; /* 40px do topo, centralizado horizontalmente */
-  max-width: 600px;
-  width: 95%;
-  z-index: 1;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  background: #fff;
-  border-radius: 16px;
-  padding: 24px 16px;
 }
 
 /* Media query para telas largas/paisagem com aspect ratio */
-@media (min-aspect-ratio: 1/1) and (min-width: 768px) {
+@media (min-aspect-ratio: 1/1) {
   body {
     padding: 0.2vmin;
   }
@@ -756,7 +378,8 @@ main.card.animate__animated.animate__fadeIn {
     min-height: clamp(180px, 40vh, 400px);
   }
 
-  .welcome-panel, .leaderboard-panel, .change-name-panel {
+  /* Ajuste para o welcome-panel em paisagem */
+  .welcome-panel {
       padding: clamp(1rem, 4vh, 2rem);
   }
 }
@@ -773,11 +396,11 @@ main.card.animate__animated.animate__fadeIn {
     .subtitle {
         font-size: clamp(0.6rem, 2vw, 1rem);
     }
-    .btn, input[type="text"], input[type="number"], .number, .feedback-message, .leaderboard-list li, .menu-nav-item {
+    .btn, input[type="text"], input[type="number"], .number, .feedback-message { /* Adicionado input[type="text"] */
         font-size: clamp(0.7rem, 2.5vw, 1.1rem);
         padding: clamp(0.6rem, 2vmin, 1rem);
     }
-    .game-container, .welcome-panel, .leaderboard-panel, .change-name-panel {
+    .game-container, .welcome-panel { /* Ajuste para welcome-panel */
         gap: clamp(0.5rem, 1.8vmin, 1rem);
         min-height: clamp(150px, 30vh, 300px);
     }
@@ -794,9 +417,4 @@ main.card.animate__animated.animate__fadeIn {
     .feedback-message {
         min-height: clamp(2rem, 6vmin, 3rem);
     }
-    .theme-toggle-btn, .menu-toggle-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 22px;
-    }
-  }
+}

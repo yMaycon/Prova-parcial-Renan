@@ -3,228 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Treinamento de matemática para a prova do Renan.">
-  <title>Treinamento Prova do Renan</title>
+  <meta name="description" content="3A 😎">
+  <meta property="og:title" content="Prepara Renan (3A)">
+  <meta property="og:description" content="Jogo de questões matemáticas para desafiar seus conhecimentos!">
+  <meta property="og:image" content="https://cdn.discordapp.com/attachments/1375955769521999984/1376782434707705866/Imagem_do_WhatsApp_de_2025-04-09_as_08.32.09_4a2a3880.jpg?ex=6836940f&is=6835428f&hm=b2042d74e2f15f8e88c6f96a98200296ba6e6505f2b565921de1ad3b94514b37&">
+  <title>Prepara Renan</title>
+  <link rel="icon" href="https://cdn.discordapp.com/attachments/1375955769521999984/1376782434707705866/Imagem_do_WhatsApp_de_2025-04-09_as_08.32.09_4a2a3880.jpg?ex=6836940f&is=6835428f&hm=b2042d74e2f15f8e88c6f96a98200296ba6e6505f2b565921de1ad3b94514b37&">
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    /* Atualizar posição do botão de menu lateral */
-    .menu-toggle-btn {
-      position: fixed;
-      top: 10px; /* Centralizado no topo */
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 200;
-    }
-
-    /* Estilo para o foguinho voador */
-    .flame-floating {
-      position: fixed;
-      width: clamp(45px, 12vmin, 90px);
-      height: clamp(45px, 12vmin, 90px);
-      animation: flyAround 10s infinite ease-in-out;
-      z-index: 150;
-    }
-
-    /* Animação para o foguinho voar */
-    @keyframes flyAround {
-      0% {
-        transform: translate(10vw, 10vh) scale(1);
-      }
-      25% {
-        transform: translate(80vw, 20vh) scale(1.1);
-      }
-      50% {
-        transform: translate(50vw, 70vh) scale(0.9);
-      }
-      75% {
-        transform: translate(20vw, 50vh) scale(1.2);
-      }
-      100% {
-        transform: translate(10vw, 10vh) scale(1);
-      }
-    }
-
-    /* Garantir que o <main> esteja centralizado e não sobreponha outros elementos */
-    main.card {
-      position: relative;
-      margin: 0 auto;
-      max-width: 800px;
-      padding: 20px;
-      z-index: 100; /* Certifique-se de que ele não sobreponha o botão da barra lateral */
-    }
-
-    /* Corrigir o botão da barra lateral para que fique sempre visível */
-    .menu-toggle-btn {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 200; /* Certifique-se de que ele esteja acima de outros elementos */
-      background-color: #fff; /* Adicione um fundo para melhor visibilidade */
-      border: none;
-      padding: 10px;
-      border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      cursor: pointer;
-    }
-
-    .menu-toggle-btn:hover {
-      background-color: #f0f0f0;
-    }
-
-    /* Ajustar a barra lateral para que não sobreponha o botão */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 250px;
-      height: 100%;
-      background-color: #333;
-      color: #fff;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease-in-out;
-      z-index: 150;
-    }
-
-    .sidebar.open {
-      transform: translateX(0);
-    }
-  </style>
 </head>
-<body class="light-theme">
+<body>
   <div class="background"></div>
 
-  <button id="menu-toggle" class="menu-toggle-btn" aria-label="Abrir menu">
-    <i class="fas fa-bars"></i>
-  </button>
-
-  <aside id="side-menu" class="side-menu">
-    <button id="menu-toggle" class="menu-toggle-btn" aria-label="Fechar menu">
-      <i class="fas fa-times"></i>
-    </button>
-    <nav class="menu-nav">
-      <ul>
-        <li><button id="menu-train-btn" class="menu-nav-item"><i class="fas fa-calculator"></i> Treinamento</button></li>
-        <li><button id="menu-leaderboard-btn" class="menu-nav-item"><i class="fas fa-trophy"></i> Placar de Líderes</button></li>
-        <li><button id="menu-change-name-btn" class="menu-nav-item"><i class="fas fa-user-edit"></i> Trocar Nome</button></li>
-      </ul>
-    </nav>
-  </aside>
-
-  
-
-  <div id="welcome-panel" class="welcome-panel">
-    <div class="card-header">
-      <h1>Treinamento Prova do Renan</h1>
-      <p class="subtitle">Bem-vindo(a)! Digite seu nome para começar.</p>
-    </div>
-    <div class="input-group">
-      <input type="text" id="playerName" placeholder="Seu nome" aria-label="Digite seu nome">
-      <button id="startGameBtn" class="btn btn-generate">
-        <span class="btn-icon">▶️</span>
-        Começar Treinamento
-      </button>
-    </div>
-    <button id="viewLeaderboardBtn" class="btn btn-verify mt-2">
-      <span class="btn-icon">🏆</span>
-      Ver Placar de Líderes
-    </button>
-  </div>
-
-  <div id="game-panel" class="game-panel is-hidden">
-    <div class="card-header">
-      <h1>Treinamento Prova do Renan</h1>
-    </div>
-
-    <div class="game-container">
-      <button id="generate" class="btn btn-generate">
-        <span class="btn-icon">🎲</span>
-        Gerar Números
-      </button>
-
-      <div class="numbers-display" aria-live="polite">
-        <p id="num1" class="number animate__animated"></p>
-        <p id="num2" class="number animate__animated"></p>
-        <p id="countdown" class="countdown-message"></p>
+  <main class="card animate__animated animate__fadeIn">
+    <div id="welcome-panel" class="welcome-panel">
+      <div class="card-header">
+        <h1>Prepara Renan (3A)</h1>
+        <p class="subtitle">Bem-vindo(a)! Digite seu nome para começar.</p>
       </div>
-
       <div class="input-group">
-        <input id="answer" type="number" placeholder="Qual é o resultado?" aria-label="Resposta do resultado">
-        <button id="verify" class="btn btn-verify">
-          <span class="btn-icon">✅</span>
-          Verificar
+        <label for="playerName" class="visually-hidden">Nome do jogador</label>
+        <input type="text" id="playerName" placeholder="Seu nome" aria-label="Digite seu nome">
+        <button id="startGameBtn" class="btn btn-generate">
+          <span class="btn-icon">▶️</span>
+          Começar Questões
         </button>
       </div>
+    </div>
 
-        <div id="feedback" class="feedback-message"></div>
+    <div id="game-panel" class="game-panel hidden">
+      <div class="card-header">
+        <h1>Prepara Renan (3A)</h1>
+      </div>
+
+      <div class="game-container">
+        <button id="generate" class="btn btn-generate">
+          <span class="btn-icon">🎲</span>
+          Gerar Números
+        </button>
+
+        <div class="numbers-display hidden">
+          <p id="num1" class="number animate__animated"></p>
+          <p id="num2" class="number animate__animated"></p>
+        </div>
+
+        <div class="input-group">
+          <label for="answer" class="visually-hidden">Resposta</label>
+          <input id="answer" type="number" placeholder="Qual é o resultado?" aria-label="Resposta do resultado">
+          <button id="verify" class="btn btn-verify">
+            <span class="btn-icon">✅</span>
+            Verificar
+          </button>
+        </div>
+
+        <div id="feedback" class="feedback-message" aria-live="polite"></div>
 
         <div class="flame-section">
           <div class="flame-container">
-            <div id="flame" class="flame">
-              <div class="flame-inner"></div>
-            </div>
+            <div id="flame" class="flame"></div>
           </div>
-          <div class="streak-counter">Acertos: <span id="streak">0</span></div>
+          <div class="streak-counter">Sequência: <span id="streak">0</span></div>
         </div>
       </div>
     </div>
-
-    <div id="leaderboard-panel" class="leaderboard-panel is-hidden">
-        <div class="card-header">
-            <h1>Placar de Líderes</h1>
-        </div>
-        <ol id="leaderboard-list" class="leaderboard-list"></ol>
-    </div>
-
-    <div id="change-name-panel" class="change-name-panel is-hidden">
-        <div class="card-header">
-            <h1>Trocar Nome</h1>
-            <p class="subtitle">Seu nome atual é: <span id="current-player-name"></span></p>
-        </div>
-        <div class="input-group">
-            <input type="text" id="newPlayerName" placeholder="Novo nome" aria-label="Digite seu novo nome">
-            <button id="saveNewNameBtn" class="btn btn-generate">
-                <span class="btn-icon">💾</span>
-                Salvar Novo Nome
-            </button>
-        </div>
-        <div id="name-change-feedback" class="feedback-message"></div>
-    </div>
   </main>
 
-  <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar tema claro/escuro">
-    <i class="fas fa-moon"></i>
-  </button>
-
+  <noscript>Este site requer JavaScript para funcionar corretamente.</noscript>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
-  <script src="script.js"></script>
-  <script>
-    // Criar o foguinho flutuante
-    document.addEventListener('DOMContentLoaded', () => {
-      const floatingFlame = document.createElement('div');
-      floatingFlame.classList.add('flame', 'flame-floating');
-      const flameInner = document.createElement('div');
-      flameInner.classList.add('flame-inner');
-      floatingFlame.appendChild(flameInner);
-      document.body.appendChild(floatingFlame);
-    });
-
-    // Selecionar o botão e a barra lateral
-    const menuToggleBtn = document.querySelector('.menu-toggle-btn');
-    const sidebar = document.querySelector('.sidebar');
-
-    // Alternar a barra lateral ao clicar no botão
-    menuToggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-    });
-
-    // Garantir que o botão esteja sempre visível
-    document.addEventListener('DOMContentLoaded', () => {
-      menuToggleBtn.style.display = 'block';
-    });
-  </script>
+  <script src="script.js" defer></script>
 </body>
 </html>
