@@ -1,43 +1,66 @@
-/* New Color Palette - Light Theme (Green) */
+/* Paleta de Cores - Tema Claro (Verde Aprimorado) */
 :root {
-  --primary-brand: #28a745; /* Green */
-  --primary-light: #218838; /* Darker Green for gradients */
-  --secondary-accent: #17a2b8; /* Teal/Cyan for highlights */
-  --success-color: #28a745; /* Green for success */
-  --error-color: #dc3545; /* Red for errors */
-  --text-dark: #343a40; /* Darker text */
-  --text-light: #ffffff; /* Light text on dark backgrounds */
-  --bg-main: #e2f0d9; /* Light green background */
-  --bg-card: #ffffff; /* White card background */
-  --border-color: #c3e6cb; /* Light green border */
+  --primary-brand: #2E7D32; /* Verde Escuro vibrante */
+  --primary-light: #4CAF50; /* Verde Médio */
+  --secondary-accent: #66BB6A; /* Verde Claro para destaques */
+  --success-color: #4CAF50; /* Verde para sucesso */
+  --error-color: #D32F2F; /* Vermelho mais forte para erros */
+  --text-dark: #212121; /* Texto muito escuro */
+  --text-light: #ffffff; /* Texto claro */
+  --bg-main: #E8F5E9; /* Verde muito claro para fundo principal */
+  --bg-card: #ffffff; /* Fundo do card branco */
+  --border-color: #A5D6A7; /* Borda verde clara */
   --shadow-light: rgba(0, 0, 0, 0.08);
   --shadow-medium: rgba(0, 0, 0, 0.15);
-  --bg-gradient-start: #e0eafc;
-  --bg-gradient-end: #cfdef3;
-  --bg-radial-circle1-color: rgba(40, 167, 69, 0.08); /* Green tint */
-  --bg-radial-circle2-color: rgba(23, 162, 184, 0.08); /* Teal tint */
+  --bg-gradient-start: #E0F2F7; /* Gradiente de fundo claro */
+  --bg-gradient-end: #BBDEFB;
+  --bg-radial-circle1-color: rgba(76, 175, 80, 0.08); /* Tinta verde */
+  --bg-radial-circle2-color: rgba(33, 150, 243, 0.08); /* Tinta azul clara */
+
+  /* Cores do Placar de Líderes - Tema Claro */
+  --leaderboard-1st-bg: #FFD700; /* Ouro */
+  --leaderboard-1st-text: #212121;
+  --leaderboard-2nd-bg: #C0C0C0; /* Prata */
+  --leaderboard-2nd-text: #212121;
+  --leaderboard-3rd-bg: #CD7F32; /* Bronze */
+  --leaderboard-3rd-text: #212121;
+  --leaderboard-default-bg: #ffffff; /* Branco */
+  --leaderboard-default-text: #2E7D32; /* Verde para texto */
+  --leaderboard-highlight-bg: #DCEDC8; /* Verde muito claro para destaque */
+  --leaderboard-highlight-text: #212121;
 }
 
-/* Dark Theme */
+/* Paleta de Cores - Tema Escuro (Roxo/Azul Escuro Harmonizado) */
 body.dark-theme {
-  --primary-brand: #8e2de2; /* Lighter Purple for dark theme primary */
-  --primary-light: #a766ed; /* Even lighter purple */
-  --secondary-accent: #00bcd4; /* Cyan/Teal (mantido) */
-  --success-color: #4CAF50; /* Green (mantido) */
-  --error-color: #F44336; /* Red (mantido) */
-  --text-dark: #ecf0f1; /* Light text */
-  --text-light: #2c3e50; /* Dark text on light elements (e.g. some buttons) */
-  --bg-main: #34495e; /* Dark blue-gray */
-  --bg-card: #2c3e50; /* Darker blue-gray */
-  --border-color: #5d6d7e; /* Medium gray border */
-  --shadow-light: rgba(0, 0, 0, 0.2);
-  --shadow-medium: rgba(0, 0, 0, 0.4);
-  --bg-gradient-start: #2c3e50;
-  --bg-gradient-end: #34495e;
-  --bg-radial-circle1-color: rgba(142, 45, 226, 0.08); /* Purple tint */
-  --bg-radial-circle2-color: rgba(0, 188, 212, 0.08); /* Cyan tint */
-}
+  --primary-brand: #7B1FA2; /* Roxo vibrante */
+  --primary-light: #9C27B0; /* Roxo médio */
+  --secondary-accent: #00BCD4; /* Ciano para destaques (mantido, pois combina bem) */
+  --success-color: #81C784; /* Verde mais claro para sucesso */
+  --error-color: #EF5350; /* Vermelho mais suave para erros */
+  --text-dark: #E0E0E0; /* Texto claro para fundo escuro */
+  --text-light: #212121; /* Texto escuro para elementos claros */
+  --bg-main: #263238; /* Azul-cinza muito escuro para fundo principal */
+  --bg-card: #37474F; /* Azul-cinza escuro para card */
+  --border-color: #546E7A; /* Borda cinza azulada */
+  --shadow-light: rgba(0, 0, 0, 0.3);
+  --shadow-medium: rgba(0, 0, 0, 0.5);
+  --bg-gradient-start: #263238; /* Gradiente de fundo escuro */
+  --bg-gradient-end: #455A64;
+  --bg-radial-circle1-color: rgba(123, 31, 162, 0.08); /* Tinta roxa */
+  --bg-radial-circle2-color: rgba(0, 188, 212, 0.08); /* Tinta ciano */
 
+  /* Cores do Placar de Líderes - Tema Escuro */
+  --leaderboard-1st-bg: #FFD700; /* Ouro */
+  --leaderboard-1st-text: #212121;
+  --leaderboard-2nd-bg: #C0C0C0; /* Prata */
+  --leaderboard-2nd-text: #212121;
+  --leaderboard-3rd-bg: #CD7F32; /* Bronze */
+  --leaderboard-3rd-text: #212121;
+  --leaderboard-default-bg: #455A64; /* Azul-cinza escuro */
+  --leaderboard-default-text: #E0E0E0; /* Texto claro */
+  --leaderboard-highlight-bg: #546E7A; /* Azul-cinza mais claro para destaque */
+  --leaderboard-highlight-text: #E0E0E0;
+}
 
 /* Base Styles */
 * {
@@ -57,7 +80,7 @@ body {
   line-height: 1.6;
   padding: 0.5vmin;
   overflow: hidden;
-  transition: background-color 0.5s ease, color 0.5s ease; /* Transição suave para o tema */
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 /* Dynamic Background Circles */
@@ -119,18 +142,18 @@ h1 {
   margin-bottom: 0.5vmin;
   font-weight: 800;
   letter-spacing: -0.8px;
-  transition: background 0.5s ease; /* Transição suave para o gradiente */
+  transition: background 0.5s ease;
 }
 
 .subtitle {
-  color: var(--text-dark); /* Ajustado para var do tema */
+  color: var(--text-dark);
   font-size: clamp(0.7rem, 2.5vw, 1.2rem);
   line-height: 1.4;
   transition: color 0.5s ease;
 }
 
 /* Painéis */
-.welcome-panel, .game-panel, .leaderboard-panel {
+.welcome-panel, .game-panel, .leaderboard-panel, .change-name-panel {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -139,7 +162,12 @@ h1 {
     width: 100%;
     padding: clamp(1rem, 4vmin, 2rem);
     text-align: center;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s ease;
+    position: absolute; /* Para que todos os painéis ocupem o mesmo espaço */
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
 }
 
 /* Classe para ocultar elementos com transição */
@@ -147,7 +175,7 @@ h1 {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  position: absolute; /* Para que não ocupe espaço quando hidden */
+  transform: translateY(10px); /* Pequeno deslocamento ao esconder */
 }
 
 
@@ -238,9 +266,9 @@ h1 {
 }
 
 .countdown-message {
-  color: var(--text-dark); /* Ajustado para var do tema */
+  color: var(--text-dark);
   font-size: clamp(0.8rem, 2.5vw, 1.1rem);
-  min-height: 1.5em; /* Garante que o espaço seja reservado */
+  min-height: 1.5em;
   transition: color 0.5s ease;
 }
 
@@ -281,16 +309,16 @@ input[type="number"] {
 
 input[type="text"]::placeholder,
 input[type="number"]::placeholder {
-  color: var(--text-dark); /* Ajustado para var do tema */
+  color: var(--text-dark);
   opacity: 0.7;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus {
   border-color: var(--primary-brand);
-  box-shadow: 0 0 0 4px rgba(106, 5, 173, 0.2); /* Sombra ainda usa purple */
+  box-shadow: 0 0 0 4px rgba(var(--primary-brand-rgb, 46, 125, 50), 0.2); /* Usa RGB para a sombra */
   outline: none;
-  background-color: var(--bg-main); /* Ajustado para var do tema */
+  background-color: var(--bg-main);
 }
 
 /* Feedback Message */
@@ -309,18 +337,17 @@ input[type="number"]:focus {
   max-width: 400px;
 }
 
-/* Specific feedback colors from JS */
 .feedback-message.success {
   color: var(--success-color);
   background-color: rgba(76, 175, 80, 0.1);
 }
 .feedback-message.error {
   color: var(--error-color);
-  background-color: rgba(244, 67, 54, 0.1);
+  background-color: rgba(211, 47, 47, 0.1);
 }
 .feedback-message.info {
   color: var(--primary-brand);
-  background-color: var(--bg-radial-circle1-color); /* Usando uma cor do tema */
+  background-color: var(--bg-radial-circle1-color);
 }
 
 
@@ -415,6 +442,8 @@ input[type="number"]:focus {
 .leaderboard-panel {
     align-items: flex-start;
     justify-content: flex-start;
+    overflow-y: auto; /* Adiciona scroll para o placar */
+    padding-bottom: 2rem; /* Espaço para o final do scroll */
 }
 
 .leaderboard-list {
@@ -424,11 +453,10 @@ input[type="number"]:focus {
     max-width: 400px;
     margin-top: 1.5rem;
     margin-bottom: 2rem;
+    position: relative; /* Para o item flutuante */
 }
 
 .leaderboard-list li {
-    background-color: var(--bg-main);
-    border-left: 4px solid var(--primary-light);
     padding: 0.8rem 1.2rem;
     margin-bottom: 0.5rem;
     border-radius: 8px;
@@ -437,15 +465,55 @@ input[type="number"]:focus {
     align-items: center;
     font-size: clamp(0.9rem, 3vw, 1.2rem);
     font-weight: 500;
-    color: var(--text-dark);
     transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+    border-left: 4px solid transparent; /* Padrão, será sobrescrito */
 }
 
-.leaderboard-list li span:first-child {
+/* Cores específicas para o Placar de Líderes */
+.leaderboard-list li.rank-1 {
+    background-color: var(--leaderboard-1st-bg);
+    color: var(--leaderboard-1st-text);
     font-weight: 700;
-    color: var(--primary-brand);
-    transition: color 0.5s ease;
+    border-left-color: var(--primary-brand);
 }
+
+.leaderboard-list li.rank-2 {
+    background-color: var(--leaderboard-2nd-bg);
+    color: var(--leaderboard-2nd-text);
+    font-weight: 600;
+    border-left-color: var(--secondary-accent);
+}
+
+.leaderboard-list li.rank-3 {
+    background-color: var(--leaderboard-3rd-bg);
+    color: var(--leaderboard-3rd-text);
+    font-weight: 600;
+    border-left-color: var(--error-color); /* Pode ser outra cor, mas mantém o padrão */
+}
+
+.leaderboard-list li:nth-child(n+4) {
+    background-color: var(--leaderboard-default-bg);
+    color: var(--leaderboard-default-text);
+    border-left-color: var(--border-color);
+}
+
+/* Ranking flutuante */
+.leaderboard-list li.highlight-player {
+    position: sticky; /* ou fixed, dependendo do efeito desejado */
+    bottom: 0; /* Fixa no fundo do container scrollável */
+    background-color: var(--leaderboard-highlight-bg);
+    color: var(--leaderboard-highlight-text);
+    border: 2px solid var(--primary-brand);
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+    z-index: 10;
+    animation: pulseHighlight 1.5s infinite alternate;
+}
+
+@keyframes pulseHighlight {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(1.01); opacity: 1; }
+}
+
 
 .mt-2 {
   margin-top: 1.2rem;
@@ -456,41 +524,144 @@ input[type="number"]:focus {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  /* Cor de fundo base para o botão, que pode ser afetada pelo tema */
-  background-color: var(--secondary-accent);
-  color: var(--text-light); /* Cor do ícone */
+  background-color: var(--secondary-accent); /* Cor base para o botão */
+  color: var(--text-light);
   border: none;
   border-radius: 50%;
-  width: 55px; /* Ligeiramente maior */
-  height: 55px; /* Ligeiramente maior */
-  font-size: 26px; /* Ícone maior */
+  width: 55px;
+  height: 55px;
+  font-size: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  /* Sombra para destaque */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, transform 0.2s ease-out, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease-out, box-shadow 0.3s ease, filter 0.3s ease;
   z-index: 100;
-  /* Efeito de brilho ao redor do botão */
-  filter: drop-shadow(0 0 8px rgba(0, 188, 212, 0.5)); /* Brilho baseado na cor secondary-accent */
+  filter: drop-shadow(0 0 8px rgba(23, 162, 184, 0.5)); /* Brilho inicial */
 }
 
 body.dark-theme .theme-toggle-btn {
-    background-color: var(--primary-brand); /* Usa a cor primária do dark theme */
-    filter: drop-shadow(0 0 8px rgba(142, 45, 226, 0.5)); /* Brilho baseado na cor primary-brand do dark theme */
+    background-color: var(--primary-brand);
+    filter: drop-shadow(0 0 8px rgba(123, 31, 162, 0.5)); /* Brilho ajustado para o tema escuro */
 }
 
-
 .theme-toggle-btn:hover {
-  transform: translateY(-3px) scale(1.05); /* Mais movimento no hover */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Sombra mais intensa no hover */
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
 }
 
 .theme-toggle-btn:active {
   transform: translateY(0);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* Menu Toggle Button (Novo) */
+.menu-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px; /* Posição na esquerda */
+  background-color: var(--primary-brand); /* Cor primária do tema */
+  color: var(--text-light);
+  border: none;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease-out, box-shadow 0.3s ease, filter 0.3s ease;
+  z-index: 100;
+  filter: drop-shadow(0 0 8px rgba(46, 125, 50, 0.5)); /* Brilho baseado na cor primária */
+}
+
+body.dark-theme .menu-toggle-btn {
+    background-color: var(--primary-brand);
+    filter: drop-shadow(0 0 8px rgba(123, 31, 162, 0.5));
+}
+
+.menu-toggle-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Side Menu (Novo) */
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -300px; /* Escondido por padrão */
+    width: 280px; /* Largura do menu */
+    height: 100%;
+    background-color: var(--bg-card);
+    box-shadow: 5px 0 15px var(--shadow-medium);
+    z-index: 200;
+    transition: left 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-right: 1px solid var(--border-color);
+}
+
+.side-menu.is-open {
+    left: 0; /* Abre o menu */
+}
+
+.close-menu-btn {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: var(--text-dark);
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+.close-menu-btn:hover {
+    color: var(--error-color);
+}
+
+.menu-nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-nav-item {
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu-nav-item i {
+    font-size: 1.3rem;
+    color: var(--primary-brand);
+    transition: color 0.3s ease;
+}
+
+.menu-nav-item:hover {
+    background-color: var(--bg-main);
+    color: var(--primary-brand);
+}
+
+.menu-nav-item:hover i {
+    color: var(--primary-light);
+}
+
 
 /* Media query para telas largas/paisagem com aspect ratio */
 @media (min-aspect-ratio: 1/1) and (min-width: 768px) {
@@ -510,7 +681,7 @@ body.dark-theme .theme-toggle-btn {
     min-height: clamp(180px, 40vh, 400px);
   }
 
-  .welcome-panel, .leaderboard-panel {
+  .welcome-panel, .leaderboard-panel, .change-name-panel {
       padding: clamp(1rem, 4vh, 2rem);
   }
 }
@@ -527,11 +698,11 @@ body.dark-theme .theme-toggle-btn {
     .subtitle {
         font-size: clamp(0.6rem, 2vw, 1rem);
     }
-    .btn, input[type="text"], input[type="number"], .number, .feedback-message, .leaderboard-list li {
+    .btn, input[type="text"], input[type="number"], .number, .feedback-message, .leaderboard-list li, .menu-nav-item {
         font-size: clamp(0.7rem, 2.5vw, 1.1rem);
         padding: clamp(0.6rem, 2vmin, 1rem);
     }
-    .game-container, .welcome-panel, .leaderboard-panel {
+    .game-container, .welcome-panel, .leaderboard-panel, .change-name-panel {
         gap: clamp(0.5rem, 1.8vmin, 1rem);
         min-height: clamp(150px, 30vh, 300px);
     }
@@ -547,5 +718,10 @@ body.dark-theme .theme-toggle-btn {
     }
     .feedback-message {
         min-height: clamp(2rem, 6vmin, 3rem);
+    }
+    .theme-toggle-btn, .menu-toggle-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
     }
 }

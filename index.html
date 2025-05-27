@@ -10,7 +10,23 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="light-theme"> <div class="background"></div>
+<body class="light-theme">
+  <div class="background"></div>
+
+  <button id="menu-toggle" class="menu-toggle-btn" aria-label="Abrir menu">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <aside id="side-menu" class="side-menu">
+    <button id="close-menu-btn" class="close-menu-btn"><i class="fas fa-times"></i></button>
+    <nav class="menu-nav">
+      <ul>
+        <li><button id="menu-train-btn" class="menu-nav-item"><i class="fas fa-calculator"></i> Treinamento</button></li>
+        <li><button id="menu-leaderboard-btn" class="menu-nav-item"><i class="fas fa-trophy"></i> Placar de Líderes</button></li>
+        <li><button id="menu-change-name-btn" class="menu-nav-item"><i class="fas fa-user-edit"></i> Trocar Nome</button></li>
+      </ul>
+    </nav>
+  </aside>
 
   <main class="card animate__animated animate__fadeIn">
     <div id="welcome-panel" class="welcome-panel">
@@ -66,10 +82,6 @@
           </div>
           <div class="streak-counter">Acertos: <span id="streak">0</span></div>
         </div>
-        <button id="showLeaderboardFromGame" class="btn btn-verify mt-2">
-          <span class="btn-icon">🏆</span>
-          Ver Placar de Líderes
-        </button>
       </div>
     </div>
 
@@ -78,13 +90,27 @@
             <h1>Placar de Líderes</h1>
         </div>
         <ol id="leaderboard-list" class="leaderboard-list"></ol>
-        <button id="backToGameBtn" class="btn btn-generate">Voltar ao Treinamento</button>
-        <button id="backToWelcomeFromLeaderboardBtn" class="btn btn-verify mt-2">Voltar à Tela Inicial</button>
+    </div>
+
+    <div id="change-name-panel" class="change-name-panel is-hidden">
+        <div class="card-header">
+            <h1>Trocar Nome</h1>
+            <p class="subtitle">Seu nome atual é: <span id="current-player-name"></span></p>
+        </div>
+        <div class="input-group">
+            <input type="text" id="newPlayerName" placeholder="Novo nome" aria-label="Digite seu novo nome">
+            <button id="saveNewNameBtn" class="btn btn-generate">
+                <span class="btn-icon">💾</span>
+                Salvar Novo Nome
+            </button>
+        </div>
+        <div id="name-change-feedback" class="feedback-message"></div>
     </div>
   </main>
 
   <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar tema claro/escuro">
-    <i class="fas fa-moon"></i> </button>
+    <i class="fas fa-moon"></i>
+  </button>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   <script src="script.js"></script>

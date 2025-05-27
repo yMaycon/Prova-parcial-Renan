@@ -2,10 +2,10 @@
 const welcomePanel = document.getElementById('welcome-panel');
 const gamePanel = document.getElementById('game-panel');
 const leaderboardPanel = document.getElementById('leaderboard-panel');
+const changeNamePanel = document.getElementById('change-name-panel'); // Novo painel
 const playerNameInput = document.getElementById('playerName');
 const startGameBtn = document.getElementById('startGameBtn');
-const viewLeaderboardBtn = document.getElementById('viewLeaderboardBtn'); // Novo botão para ver placar na tela inicial
-const showLeaderboardFromGameBtn = document.getElementById('showLeaderboardFromGame'); // Novo botão para ver placar no jogo
+const viewLeaderboardBtn = document.getElementById('viewLeaderboardBtn');
 const generateBtn = document.getElementById('generate');
 const num1Display = document.getElementById('num1');
 const num2Display = document.getElementById('num2');
@@ -17,17 +17,25 @@ const feedbackMessage = document.getElementById('feedback');
 const flame = document.getElementById('flame');
 const streakCounter = document.getElementById('streak');
 const leaderboardList = document.getElementById('leaderboard-list');
-const backToGameBtn = document.getElementById('backToGameBtn');
-const backToWelcomeFromLeaderboardBtn = document.getElementById('backToWelcomeFromLeaderboardBtn'); // Novo botão para voltar à tela inicial do placar
-const themeToggleBtn = document.getElementById('theme-toggle'); // Botão de alternância de tema
+const themeToggleBtn = document.getElementById('theme-toggle');
+const menuToggleBtn = document.getElementById('menu-toggle'); // Botão de menu
+const sideMenu = document.getElementById('side-menu'); // Menu lateral
+const closeMenuBtn = document.getElementById('close-menu-btn'); // Botão de fechar menu
+const menuTrainBtn = document.getElementById('menu-train-btn'); // Botão "Treinamento" no menu
+const menuLeaderboardBtn = document.getElementById('menu-leaderboard-btn'); // Botão "Placar" no menu
+const menuChangeNameBtn = document.getElementById('menu-change-name-btn'); // Botão "Trocar Nome" no menu
+const currentNameDisplay = document.getElementById('current-player-name'); // Para exibir o nome atual
+const newPlayerNameInput = document.getElementById('newPlayerName'); // Input para novo nome
+const saveNewNameBtn = document.getElementById('saveNewNameBtn'); // Botão para salvar novo nome
+const nameChangeFeedback = document.getElementById('name-change-feedback'); // Feedback de troca de nome
 
 // Variáveis do jogo
 let correctSum = 0;
 let streak = 0;
-let currentPlayerName = 'Visitante';
+let currentPlayerName = 'Visitante'; // Valor padrão que será substituído por localStorage
 let isVerifying = false;
 let countdownInterval;
-let currentScore = 0; // Usado para o placar de líderes
+let currentScore = 0;
 const WEBHOOK_URL = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXOPE3c331zLjzBrXYJzPv589YeLSoz3Hhn0G7ZAuEb7BqLByelvoC3AKvp8IzyP';
 
 // Sons
@@ -35,15 +43,13 @@ const soundCorrect = typeof Howl !== 'undefined' ? new Howl({ src: ['assets/corr
 const soundWrong = typeof Howl !== 'undefined' ? new Howl({ src: ['assets/wrong.mp3'], volume: 0.7 }) : null;
 
 // Função para exibir mensagens de feedback
-function showFeedback(message, type = 'info', icon = '') {
-    feedbackMessage.textContent = icon + ' ' + message;
-    // Remove todas as classes de tipo antes de adicionar a nova para evitar conflitos
-    feedbackMessage.classList.remove('success', 'error', 'info');
-    feedbackMessage.classList.add(type);
-    // Reinicia a animação
-    feedbackMessage.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
-    void feedbackMessage.offsetWidth; // Força o reflow para reiniciar a animação
-    feedbackMessage.classList.add('animate__animated', 'animate__bounceIn');
+function showFeedback(element, message, type = 'info', icon = '') {
+    element.textContent = icon + ' ' + message;
+    element.classList.remove('success', 'error', 'info');
+    element.classList.add(type);
+    element.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
+    void element.offsetWidth;
+    element.classList.add('animate__animated', 'animate__bounceIn');
 }
 
 // Webhook
@@ -71,7 +77,7 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
-            keepalive: true // Tenta garantir que o webhook seja enviado mesmo se a página for fechada
+            keepalive: true
         });
         if (!response.ok) {
             console.error('Erro ao enviar webhook:', response.status, await response.text());
@@ -85,7 +91,7 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
 function getLeaderboard() {
     try {
         const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-        return leaderboard.sort((a, b) => b.score - a.score); // Ordena por pontuação (maior primeiro)
+        return leaderboard.sort((a, b) => b.score - a.score);
     } catch (e) {
         console.error("Erro ao ler leaderboard do localStorage:", e);
         return [];
@@ -101,13 +107,12 @@ function saveLeaderboard(leaderboard) {
 }
 
 function updateLeaderboard(playerName, score) {
-    if (!playerName || score === undefined) return; // Garante que os dados sejam válidos
+    if (!playerName || score === undefined) return;
 
     const leaderboard = getLeaderboard();
     const existingPlayerIndex = leaderboard.findIndex(entry => entry.name === playerName);
 
     if (existingPlayerIndex > -1) {
-        // Atualiza a pontuação se for maior
         if (score > leaderboard[existingPlayerIndex].score) {
             leaderboard[existingPlayerIndex].score = score;
         }
@@ -115,70 +120,111 @@ function updateLeaderboard(playerName, score) {
         leaderboard.push({ name: playerName, score: score });
     }
     saveLeaderboard(leaderboard);
-    renderLeaderboard();
+    renderLeaderboard(); // Sempre renderiza após atualização
 }
 
 function renderLeaderboard() {
     const leaderboard = getLeaderboard();
-    leaderboardList.innerHTML = ''; // Limpa a lista antes de renderizar
+    leaderboardList.innerHTML = '';
     if (leaderboard.length === 0) {
-        leaderboardList.innerHTML = '<li>Nenhuma pontuação registrada ainda.</li>';
+        leaderboardList.innerHTML = '<li style="text-align: center;">Nenhuma pontuação registrada ainda.</li>';
         return;
     }
     leaderboard.forEach((entry, index) => {
         const listItem = document.createElement('li');
         listItem.innerHTML = `<span>${index + 1}. ${entry.name}</span> <span>${entry.score} acertos</span>`;
+
+        // Adiciona classes para cores personalizadas
+        if (index === 0) {
+            listItem.classList.add('rank-1');
+        } else if (index === 1) {
+            listItem.classList.add('rank-2');
+        } else if (index === 2) {
+            listItem.classList.add('rank-3');
+        } else {
+            // Do 4º lugar em diante, fundo branco com letras verdes
+            listItem.classList.add('rank-default');
+        }
+
+        // Destaca o jogador atual se ele estiver abaixo do 10º lugar
+        if (currentPlayerName && entry.name === currentPlayerName && index >= 10) {
+            listItem.classList.add('highlight-player');
+        }
+
         leaderboardList.appendChild(listItem);
     });
 }
 
-function showLeaderboard() {
-    welcomePanel.classList.add('is-hidden');
-    gamePanel.classList.add('is-hidden');
-    leaderboardPanel.classList.remove('is-hidden');
-    renderLeaderboard();
+// Funções de navegação entre painéis
+function showPanel(panelToShow) {
+    const panels = [welcomePanel, gamePanel, leaderboardPanel, changeNamePanel];
+    panels.forEach(panel => {
+        if (panel === panelToShow) {
+            panel.classList.remove('is-hidden');
+            panel.style.transform = 'translateY(0)'; // Garante que a animação ocorra
+            panel.style.position = 'relative'; // Ocupa espaço
+        } else {
+            panel.classList.add('is-hidden');
+            panel.style.transform = 'translateY(10px)'; // Esconde com deslocamento
+            panel.style.position = 'absolute'; // Não ocupa espaço
+        }
+    });
+    sideMenu.classList.remove('is-open'); // Fecha o menu lateral ao navegar
 }
 
-function hideLeaderboard() {
-    leaderboardPanel.classList.add('is-hidden');
-    gamePanel.classList.remove('is-hidden'); // Volta para o painel do jogo
-}
-
-function backToWelcome() {
-    leaderboardPanel.classList.add('is-hidden');
-    gamePanel.classList.add('is-hidden');
-    welcomePanel.classList.remove('is-hidden');
+function showWelcome() {
+    showPanel(welcomePanel);
     playerNameInput.focus();
 }
 
+function showGame() {
+    if (currentPlayerName === 'Visitante' && !localStorage.getItem('playerName')) {
+        showFeedback(feedbackMessage, 'Por favor, digite seu nome primeiro!', 'error', '⚠️');
+        showPanel(welcomePanel); // Volta para a tela de boas-vindas se o nome não estiver salvo
+        return;
+    }
+    showPanel(gamePanel);
+    generateNumbers();
+}
+
+function showLeaderboard() {
+    showPanel(leaderboardPanel);
+    renderLeaderboard(); // Garante que o placar seja renderizado ao abrir
+}
+
+function showChangeName() {
+    showPanel(changeNamePanel);
+    currentNameDisplay.textContent = currentPlayerName;
+    newPlayerNameInput.value = ''; // Limpa o input
+    nameChangeFeedback.textContent = ''; // Limpa feedback
+    newPlayerNameInput.focus();
+}
 
 // Gerar números
 function generateNumbers() {
-    clearInterval(countdownInterval); // Limpa qualquer countdown anterior
-    countdownDisplay.textContent = ''; // Limpa a mensagem de countdown
-
+    clearInterval(countdownInterval);
+    countdownDisplay.textContent = '';
     num1Display.textContent = '';
     num2Display.textContent = '';
-    answerInput.value = ''; // Limpa o input do usuário
+    answerInput.value = '';
 
-    answerInput.disabled = true; // Desabilita o input e botão até o segundo número aparecer
+    answerInput.disabled = true;
     verifyBtn.disabled = true;
-    generateBtn.disabled = true; // Desabilita o botão gerar enquanto gera
+    generateBtn.disabled = true;
 
     feedbackMessage.textContent = '';
-    feedbackMessage.className = 'feedback-message'; // Limpa classes de feedback
+    feedbackMessage.className = 'feedback-message';
 
     const num1 = Math.floor(Math.random() * 2001) - 1000;
     const num2 = Math.floor(Math.random() * 2001) - 1000;
     correctSum = num1 + num2;
 
     num1Display.textContent = `Primeiro número: ${num1}`;
-    // Reinicia a animação para num1
     num1Display.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
-    void num1Display.offsetWidth; // Força o reflow
+    void num1Display.offsetWidth;
     num1Display.classList.add('animate__animated', 'animate__bounceIn');
 
-    numbersDisplayContainer.classList.remove('is-hidden'); // Garante que esteja visível
+    numbersDisplayContainer.classList.remove('is-hidden');
 
     let seconds = 5;
     countdownDisplay.textContent = `Segundo número em ${seconds} segundos...`;
@@ -188,23 +234,22 @@ function generateNumbers() {
         countdownDisplay.textContent = `Segundo número em ${seconds} segundos...`;
         if (seconds <= 0) {
             clearInterval(countdownInterval);
-            countdownDisplay.textContent = ''; // Limpa a mensagem de countdown
+            countdownDisplay.textContent = '';
             num2Display.textContent = `Segundo número: ${num2}`;
-            // Reinicia a animação para num2
             num2Display.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
-            void num2Display.offsetWidth; // Força o reflow
+            void num2Display.offsetWidth;
             num2Display.classList.add('animate__animated', 'animate__bounceIn');
 
-            answerInput.disabled = false; // Habilita o input e botão
+            answerInput.disabled = false;
             verifyBtn.disabled = false;
-            generateBtn.disabled = false; // Reabilita o botão gerar
+            generateBtn.disabled = false;
             answerInput.focus();
         }
     }, 1000);
 }
 
 function verifyAnswer() {
-    if (isVerifying) return; // Evita múltiplas verificações
+    if (isVerifying) return;
     isVerifying = true;
 
     answerInput.disabled = true;
@@ -212,9 +257,8 @@ function verifyAnswer() {
 
     const userAnswerString = answerInput.value.trim();
 
-    // Verifica se o segundo número já apareceu
     if (num2Display.textContent === '') {
-        showFeedback('Aguarde o segundo número aparecer!', 'info', '⏳');
+        showFeedback(feedbackMessage, 'Aguarde o segundo número aparecer!', 'info', '⏳');
         isVerifying = false;
         answerInput.disabled = false;
         verifyBtn.disabled = false;
@@ -225,18 +269,18 @@ function verifyAnswer() {
     let userAnswer;
 
     if (!isNumeric) {
-        showFeedback('Por favor, digite um número válido.', 'error', '❌');
+        showFeedback(feedbackMessage, 'Por favor, digite um número válido.', 'error', '❌');
         if (soundWrong) soundWrong.play();
-        flame.classList.add('flame-error'); // Adiciona classe de erro à chama
-        streak = 0; // Reseta a sequência de acertos
+        flame.classList.add('flame-error');
+        streak = 0;
         streakCounter.textContent = streak;
-        updateLeaderboard(currentPlayerName, currentScore); // Atualiza o placar com a pontuação atual
-        currentScore = 0; // Reseta a pontuação do jogo atual
+        updateLeaderboard(currentPlayerName, currentScore); // Salva a pontuação atual
+        currentScore = 0; // Reseta pontuação para nova rodada
+        setTimeout(() => flame.classList.remove('flame-error'), 500);
         setTimeout(() => {
-            flame.classList.remove('flame-error');
-        }, 500);
-        setTimeout(generateNumbers, 1500); // Gera novos números
-        isVerifying = false; // Reabilita a verificação após a animação e geração
+            isVerifying = false;
+            generateNumbers();
+        }, 1500);
         return;
     } else {
         userAnswer = parseInt(userAnswerString);
@@ -244,51 +288,47 @@ function verifyAnswer() {
 
     let messageTitle = '';
     let messageDescription = '';
-    let messageColor = 0x6A05AD; // Cor padrão
+    let messageColor = 0x6A05AD;
 
     if (userAnswer === correctSum) {
         streak++;
-        currentScore++; // Incrementa a pontuação para o placar
+        currentScore++;
         streakCounter.textContent = streak;
-        showFeedback('Correto! 🎉', 'success', '✅');
-        flame.classList.add('flame-success'); // Adiciona classe de sucesso à chama
+        showFeedback(feedbackMessage, 'Correto! 🎉', 'success', '✅');
+        flame.classList.add('flame-success');
         if (soundCorrect) soundCorrect.play();
 
         messageTitle = 'Resposta Correta!';
         const num1 = parseInt(num1Display.textContent.replace('Primeiro número: ', ''));
         const num2 = parseInt(num2Display.textContent.replace('Segundo número: ', ''));
         messageDescription = `O(a) jogador(a) **${currentPlayerName}** acertou a soma! (${num1} + ${num2} = ${correctSum})\nAcertos Consecutivos: **${streak}**\nPontuação atual: **${currentScore}**`;
-        messageColor = 0x4CAF50; // Verde para sucesso
+        messageColor = 0x4CAF50;
     } else {
         streak = 0;
         streakCounter.textContent = streak;
-        showFeedback(`Errado! A soma correta era ${correctSum}. Tente novamente.`, 'error', '❌');
-        flame.classList.add('flame-error'); // Adiciona classe de erro à chama
+        showFeedback(feedbackMessage, `Errado! A soma correta era ${correctSum}.`, 'error', '❌');
+        flame.classList.add('flame-error');
         if (soundWrong) soundWrong.play();
 
         messageTitle = 'Resposta Incorreta!';
         const num1 = parseInt(num1Display.textContent.replace('Primeiro número: ', ''));
         const num2 = parseInt(num2Display.textContent.replace('Segundo número: ', ''));
         messageDescription = `O(a) jogador(a) **${currentPlayerName}** errou a soma. A resposta para ${num1} + ${num2} era ${correctSum}, mas digitou ${userAnswer}.\nAcertos Consecutivos: **${streak}**\nPontuação final da rodada: **${currentScore}**`;
-        messageColor = 0xF44336; // Vermelho para erro
+        messageColor = 0xF44336;
 
-        updateLeaderboard(currentPlayerName, currentScore); // Atualiza o placar
-        currentScore = 0; // Reseta a pontuação do jogo atual
+        updateLeaderboard(currentPlayerName, currentScore);
+        currentScore = 0;
     }
 
-    // Envia webhook para acertos e erros
     sendDiscordWebhook('Renan\'s Bot', {
         title: messageTitle,
         description: messageDescription,
     }, messageColor);
 
+    setTimeout(() => flame.classList.remove('flame-success', 'flame-error'), 500);
     setTimeout(() => {
-        flame.classList.remove('flame-success', 'flame-error');
-    }, 500);
-
-    setTimeout(() => {
-        isVerifying = false; // Libera a verificação
-        generateNumbers(); // Gera novos números
+        isVerifying = false;
+        generateNumbers();
     }, 1500);
 }
 
@@ -298,12 +338,12 @@ function toggleTheme() {
     if (body.classList.contains('light-theme')) {
         body.classList.remove('light-theme');
         body.classList.add('dark-theme');
-        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>'; // Altera para ícone de sol
+        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
         localStorage.setItem('theme', 'dark');
     } else {
         body.classList.remove('dark-theme');
         body.classList.add('light-theme');
-        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>'; // Altera para ícone de lua
+        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
         localStorage.setItem('theme', 'light');
     }
 }
@@ -313,67 +353,107 @@ startGameBtn.addEventListener('click', () => {
     const name = playerNameInput.value.trim();
     if (name) {
         currentPlayerName = name;
-        welcomePanel.classList.add('is-hidden');
-        gamePanel.classList.remove('is-hidden');
-
+        localStorage.setItem('playerName', name); // Salva o nome
+        showGame();
         sendDiscordWebhook('Renan\'s Bot', {
             title: 'Novo Jogador Iniciou o Treinamento!',
             description: `O(a) jogador(a) **${currentPlayerName}** acabou de iniciar o treinamento.`
         }, 0x00BCD4);
-
-        generateNumbers();
     } else {
-        showFeedback('Por favor, digite seu nome para começar!', 'error', '⚠️');
+        showFeedback(feedbackMessage, 'Por favor, digite seu nome para começar!', 'error', '⚠️');
         playerNameInput.focus();
     }
 });
 
 viewLeaderboardBtn.addEventListener('click', showLeaderboard);
-showLeaderboardFromGameBtn.addEventListener('click', showLeaderboard);
-backToGameBtn.addEventListener('click', hideLeaderboard);
-backToWelcomeFromLeaderboardBtn.addEventListener('click', backToWelcome);
-themeToggleBtn.addEventListener('click', toggleTheme); // Adiciona listener para o botão de tema
-
 generateBtn.addEventListener('click', generateNumbers);
 verifyBtn.addEventListener('click', verifyAnswer);
-
 answerInput.addEventListener('keypress', (event) => {
     if (event.key === 'Enter' && !isVerifying) verifyAnswer();
 });
-
 playerNameInput.addEventListener('keypress', (event) => {
     if (event.key === 'Enter') startGameBtn.click();
 });
 
-// Melhoria na lógica de beforeunload
+// Eventos do menu lateral
+menuToggleBtn.addEventListener('click', () => {
+    sideMenu.classList.add('is-open');
+});
+
+closeMenuBtn.addEventListener('click', () => {
+    sideMenu.classList.remove('is-open');
+});
+
+menuTrainBtn.addEventListener('click', showGame);
+menuLeaderboardBtn.addEventListener('click', showLeaderboard);
+menuChangeNameBtn.addEventListener('click', showChangeName);
+
+saveNewNameBtn.addEventListener('click', () => {
+    const newName = newPlayerNameInput.value.trim();
+    if (newName && newName !== currentPlayerName) {
+        // Antes de mudar o nome, transfere a pontuação antiga para o novo nome (se houver)
+        const oldLeaderboard = getLeaderboard();
+        const oldEntry = oldLeaderboard.find(entry => entry.name === currentPlayerName);
+
+        if (oldEntry) {
+            updateLeaderboard(newName, oldEntry.score); // Adiciona a pontuação do nome antigo ao novo nome
+            // Remove a entrada antiga do placar
+            const updatedLeaderboard = oldLeaderboard.filter(entry => entry.name !== currentPlayerName);
+            saveLeaderboard(updatedLeaderboard);
+        }
+
+        currentPlayerName = newName;
+        localStorage.setItem('playerName', newName); // Salva o novo nome
+        currentNameDisplay.textContent = newName;
+        showFeedback(nameChangeFeedback, 'Nome atualizado com sucesso!', 'success', '✔️');
+
+        sendDiscordWebhook('Renan\'s Bot', {
+            title: 'Nome do Jogador Alterado!',
+            description: `O(a) jogador(a) **${oldEntry ? oldEntry.name : 'Desconhecido'}** agora é conhecido como **${currentPlayerName}**.`
+        }, 0x00BCD4);
+
+    } else if (newName === currentPlayerName) {
+        showFeedback(nameChangeFeedback, 'Este já é o seu nome!', 'info', 'ℹ️');
+    } else {
+        showFeedback(nameChangeFeedback, 'Por favor, digite um nome válido.', 'error', '❌');
+    }
+});
+
+newPlayerNameInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') saveNewNameBtn.click();
+});
+
+
+// Lógica de `beforeunload` para salvar pontuação final
 window.addEventListener('beforeunload', (event) => {
-    // Se o jogador não for "Visitante" e tiver algum acerto na sessão atual
     if (currentPlayerName !== 'Visitante' && currentScore > 0) {
-        updateLeaderboard(currentPlayerName, currentScore); // Garante que a pontuação final seja salva
-        // Envia o webhook de forma assíncrona com keepalive
+        updateLeaderboard(currentPlayerName, currentScore);
         sendDiscordWebhook('Renan\'s Bot', {
             title: 'Sessão de Treinamento Encerrada!',
             description: `O(a) jogador(a) **${currentPlayerName}** encerrou o treinamento com **${currentScore}** acertos totais.`
         }, 0x6A05AD);
     }
-    // Não retorne nada ou retorne indefinido para permitir o fechamento padrão do navegador.
-    // O evento `beforeunload` é principalmente para avisar o usuário, não para atrasar o fechamento.
 });
 
-
+// Inicialização ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
-    // Carrega o tema salvo do localStorage
+    // Carrega o tema salvo
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
-        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>'; // Ícone de sol para indicar que está no tema escuro
+        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
     } else {
         document.body.classList.add('light-theme');
-        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>'; // Ícone de lua para indicar que está no tema claro
+        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
     }
 
-    welcomePanel.classList.remove('is-hidden');
-    gamePanel.classList.add('is-hidden'); // Garante que o painel do jogo esteja oculto no início
-    leaderboardPanel.classList.add('is-hidden'); // Garante que o painel do placar esteja oculto
-    playerNameInput.focus();
+    // Carrega o nome do jogador salvo
+    const savedPlayerName = localStorage.getItem('playerName');
+    if (savedPlayerName) {
+        currentPlayerName = savedPlayerName;
+        playerNameInput.value = savedPlayerName;
+        showGame(); // Inicia direto no jogo se o nome já estiver salvo
+    } else {
+        showWelcome(); // Exibe a tela de boas-vindas para pedir o nome
+    }
 });
