@@ -1,42 +1,41 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo dos Números</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Jogo das Perguntas</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <header>
-        <h1>Jogo dos Números</h1>
-        <button id="toggle-theme" class="theme-toggle" title="Alternar tema">
-            <span class="icon">🌙</span>
-        </button>
+        <h1>Jogo das Perguntas</h1>
+        <div class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </div>
     </header>
+
     <main>
-        <section class="nome-container">
-            <label for="nome">Digite seu nome:</label>
-            <input type="text" id="nome" placeholder="Seu nome...">
-            <button onclick="salvarNome()">Salvar Nome</button>
+        <section class="player-info">
+            <label for="playerName">Seu nome:</label>
+            <input type="text" id="playerName" placeholder="Digite seu nome">
+            <button onclick="saveName()">Salvar</button>
         </section>
 
-        <section id="jogo" style="display:none;">
-            <h2 id="boas-vindas"></h2>
-            <div class="numero-container">
-                <p id="numero">Clique em "Sortear Número"</p>
-                <button onclick="sortearNumero()">Sortear Número</button>
-                <p id="contador"></p>
-            </div>
-            <div class="resposta-container">
-                <p>Você já fez isso hoje?</p>
-                <button onclick="responder('Sim')">Sim</button>
-                <button onclick="responder('Não')">Não</button>
-            </div>
+        <section class="question-box">
+            <div id="question">Clique no botão para começar!</div>
+            <div id="countdown"></div>
+            <button onclick="nextQuestion()">Próxima Pergunta</button>
         </section>
 
-        <section id="ranking-container">
+        <section class="response-buttons">
+            <button onclick="registerResponse('Sim')">Sim</button>
+            <button onclick="registerResponse('Não')">Não</button>
+        </section>
+
+        <section class="ranking">
             <h2>Ranking</h2>
-            <ul id="ranking"></ul>
+            <ul id="rankingList"></ul>
         </section>
     </main>
 
