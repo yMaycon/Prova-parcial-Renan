@@ -664,6 +664,79 @@ body.dark-theme .menu-toggle-btn {
   color: var(--primary-light);
 }
 
+/* Botão do menu sempre acima da barra lateral */
+#menu-toggle.menu-toggle-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1101; /* maior que o z-index do menu lateral */
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+}
+
+/* Barra lateral com z-index menor */
+#side-menu.side-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  background: var(--sidebar-bg, #29284a);
+  color: var(--sidebar-text, #fff);
+  z-index: 1100;
+  transition: transform 0.3s cubic-bezier(.77,0,.18,1);
+  transform: translateX(-100%);
+  box-shadow: 2px 0 8px rgba(44, 41, 74, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+#side-menu.is-open {
+  transform: translateX(0);
+}
+
+/* Botão do menu na borda direita da barra lateral */
+.menu-toggle-btn {
+  position: absolute;
+  top: 16px;
+  right: -48px; /* Fora da barra, mas colado à borda */
+  z-index: 1200;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  border: none;
+  padding: 14px;
+  cursor: pointer;
+  color: #4b2994;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: right 0.3s cubic-bezier(.77,0,.18,1), background 0.2s;
+}
+.menu-toggle-btn:focus {
+  outline: 2px solid #4b2994;
+}
+.menu-toggle-btn:hover {
+  background: #f0eefb;
+}
+
+/* Corrigir o main para não ficar no meio vertical da tela */
+main.card.animate__animated.animate__fadeIn {
+  position: relative;
+  margin: 40px auto 0 auto; /* 40px do topo, centralizado horizontalmente */
+  max-width: 600px;
+  width: 95%;
+  z-index: 1;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px 16px;
+}
 
 /* Media query para telas largas/paisagem com aspect ratio */
 @media (min-aspect-ratio: 1/1) and (min-width: 768px) {
@@ -726,4 +799,4 @@ body.dark-theme .menu-toggle-btn {
         height: 45px;
         font-size: 22px;
     }
-}
+  }

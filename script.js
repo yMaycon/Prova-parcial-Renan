@@ -377,7 +377,18 @@ playerNameInput.addEventListener('keypress', (event) => {
 
 // Eventos do menu lateral
 menuToggleBtn.addEventListener('click', () => {
-    sideMenu.classList.add('is-open');
+    sideMenu.classList.toggle('is-open');
+    // Alterna ícone
+    const icon = menuToggleBtn.querySelector('i');
+    if (sideMenu.classList.contains('is-open')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+        menuToggleBtn.setAttribute('aria-label', 'Fechar menu');
+    } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+        menuToggleBtn.setAttribute('aria-label', 'Abrir menu');
+    }
 });
 
 closeMenuBtn.addEventListener('click', () => {

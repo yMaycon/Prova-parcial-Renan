@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     /* Atualizar posição do botão de menu lateral */
@@ -101,6 +102,9 @@
   </button>
 
   <aside id="side-menu" class="side-menu">
+    <button id="menu-toggle" class="menu-toggle-btn" aria-label="Fechar menu">
+      <i class="fas fa-times"></i>
+    </button>
     <nav class="menu-nav">
       <ul>
         <li><button id="menu-train-btn" class="menu-nav-item"><i class="fas fa-calculator"></i> Treinamento</button></li>
@@ -112,50 +116,48 @@
 
   
 
-  <main class="card animate__animated animate__fadeIn">
-  </main>
-    <div id="welcome-panel" class="welcome-panel">
-      <div class="card-header">
-        <h1>Treinamento Prova do Renan</h1>
-        <p class="subtitle">Bem-vindo(a)! Digite seu nome para começar.</p>
-      </div>
-      <div class="input-group">
-        <input type="text" id="playerName" placeholder="Seu nome" aria-label="Digite seu nome">
-        <button id="startGameBtn" class="btn btn-generate">
-          <span class="btn-icon">▶️</span>
-          Começar Treinamento
-        </button>
-      </div>
-      <button id="viewLeaderboardBtn" class="btn btn-verify mt-2">
-        <span class="btn-icon">🏆</span>
-        Ver Placar de Líderes
+  <div id="welcome-panel" class="welcome-panel">
+    <div class="card-header">
+      <h1>Treinamento Prova do Renan</h1>
+      <p class="subtitle">Bem-vindo(a)! Digite seu nome para começar.</p>
+    </div>
+    <div class="input-group">
+      <input type="text" id="playerName" placeholder="Seu nome" aria-label="Digite seu nome">
+      <button id="startGameBtn" class="btn btn-generate">
+        <span class="btn-icon">▶️</span>
+        Começar Treinamento
       </button>
     </div>
+    <button id="viewLeaderboardBtn" class="btn btn-verify mt-2">
+      <span class="btn-icon">🏆</span>
+      Ver Placar de Líderes
+    </button>
+  </div>
 
-    <div id="game-panel" class="game-panel is-hidden">
-      <div class="card-header">
-        <h1>Treinamento Prova do Renan</h1>
+  <div id="game-panel" class="game-panel is-hidden">
+    <div class="card-header">
+      <h1>Treinamento Prova do Renan</h1>
+    </div>
+
+    <div class="game-container">
+      <button id="generate" class="btn btn-generate">
+        <span class="btn-icon">🎲</span>
+        Gerar Números
+      </button>
+
+      <div class="numbers-display" aria-live="polite">
+        <p id="num1" class="number animate__animated"></p>
+        <p id="num2" class="number animate__animated"></p>
+        <p id="countdown" class="countdown-message"></p>
       </div>
 
-      <div class="game-container">
-        <button id="generate" class="btn btn-generate">
-          <span class="btn-icon">🎲</span>
-          Gerar Números
+      <div class="input-group">
+        <input id="answer" type="number" placeholder="Qual é o resultado?" aria-label="Resposta do resultado">
+        <button id="verify" class="btn btn-verify">
+          <span class="btn-icon">✅</span>
+          Verificar
         </button>
-
-        <div class="numbers-display" aria-live="polite">
-          <p id="num1" class="number animate__animated"></p>
-          <p id="num2" class="number animate__animated"></p>
-          <p id="countdown" class="countdown-message"></p>
-        </div>
-
-        <div class="input-group">
-          <input id="answer" type="number" placeholder="Qual é o resultado?" aria-label="Resposta do resultado">
-          <button id="verify" class="btn btn-verify">
-            <span class="btn-icon">✅</span>
-            Verificar
-          </button>
-        </div>
+      </div>
 
         <div id="feedback" class="feedback-message"></div>
 
