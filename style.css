@@ -31,7 +31,7 @@ body {
   color: var(--text-dark);
   line-height: 1.6;
   padding: 0.5vmin;
-  overflow: hidden; /* Mantém o overflow oculto para evitar scroll indesejado */
+  overflow: hidden;
 }
 
 /* Dynamic Background Circles */
@@ -70,7 +70,7 @@ body {
   display: flex;
   flex-direction: column;
   height: auto;
-  max-height: 99svh; /* Garante que o card quase sempre caiba na tela */
+  max-height: 99svh;
   justify-content: space-between;
 }
 
@@ -101,67 +101,370 @@ h1 {
   line-height: 1.4;
 }
 
-/* NOVO: Painel de instruções */
-.instructions-panel {
+/* NOVO: Estilos para os painéis */
+.welcome-panel, .game-panel, .leaderboard-panel {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: clamp(1rem, 4vmin, 2rem);
+    text-align: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* Classe para ocultar elementos com transição */
+.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute; /* Para que não ocupe espaço quando hidden */
+}
+
+
+.game-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  background-color: #ffffffd0;
-  border-radius: 16px;
-  padding: clamp(1rem, 3vmin, 2rem);
-  border: 1px solid #e0e0e0;
-  max-height: 85svh;
-  overflow-y: auto;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 8px 20px var(--shadow-light);
-  color: var(--text-dark);
-  font-size: clamp(0.8rem, 2.5vw, 1rem);
-  line-height: 1.5;
-  animation: fadeInInstructions 0.5s ease-in-out;
+  gap: clamp(0.7rem, 2.5vmin, 1.5rem);
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  min-height: clamp(200px, 40svh, 450px);
 }
 
-@keyframes fadeInInstructions {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Buttons */
+.btn {
+  width: 100%;
+  max-width: 350px;
+  padding: clamp(0.7rem, 2.5vmin, 1.2rem) clamp(0.8rem, 3vmin, 1.5rem);
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: clamp(0.8rem, 2.8vw, 1.3rem);
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.4rem, 1.5vmin, 0.8rem);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 5px 15px var(--shadow-light);
 }
 
-.instructions-panel h2 {
-  font-size: clamp(1rem, 3vw, 1.5rem);
-  margin-bottom: 0.5rem;
+.btn-generate {
+  background: linear-gradient(45deg, var(--primary-brand), var(--primary-light));
+  color: var(--text-light);
+}
+
+.btn-verify {
+  background: var(--secondary-accent);
+  color: var(--text-light);
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 8px 20px var(--shadow-medium);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px var(--shadow-light);
+}
+
+/* Button Shine Effect */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 20%, rgba(255,255,255,0.2) 50%, transparent 80%);
+  animation: shine 2.5s infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* Numbers Display */
+.numbers-display {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.7rem, 2vmin, 1.2rem);
+  margin: clamp(0.7rem, 2vmin, 1.2rem) 0;
+  transition: opacity 0.5s ease;
+  width: 100%;
+  max-width: 400px;
+}
+
+.countdown-message {
+  font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+  color: #7f8c8d;
+  min-height: 1.5em; /* Garante que o espaço seja reservado */
+}
+
+.number {
+  font-size: clamp(0.9rem, 3.8vw, 1.8rem);
+  font-weight: 700;
+  padding: clamp(0.7rem, 2.5vmin, 1.2rem);
+  background: var(--bg-main);
+  border-radius: 10px;
+  border-left: 4px solid var(--secondary-accent);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
   color: var(--primary-brand);
+}
+
+/* Input Group */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.7rem, 2vmin, 1.2rem);
+  width: 100%;
+  max-width: 400px;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: clamp(0.7rem, 2.5vmin, 1.2rem) clamp(0.8rem, 3vmin, 1.5rem);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: clamp(0.8rem, 2.8vw, 1.3rem);
+  transition: all 0.3s ease;
+  color: var(--text-dark);
+  background-color: var(--bg-card);
   text-align: center;
 }
 
-.instructions-panel p {
-  margin-bottom: 0.5rem;
+input[type="text"]::placeholder,
+input[type="number"]::placeholder {
+  color: #b2bec3;
 }
 
-.instructions-panel ul {
-  list-style: disc;
-  margin-left: 1.2rem;
-  padding-left: 0.5rem;
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: var(--primary-brand);
+  box-shadow: 0 0 0 4px rgba(106, 5, 173, 0.2);
+  outline: none;
+  background-color: #f8f8f8;
 }
 
-.instructions-panel ul li {
-  margin-bottom: 0.5rem;
-  color: #555;
+/* Feedback Message */
+.feedback-message {
+  padding: clamp(0.7rem, 2.5vmin, 1.2rem);
+  border-radius: 10px;
+  font-size: clamp(0.8rem, 3vw, 1.3rem);
+  font-weight: 600;
+  text-align: center;
+  min-height: clamp(2.8rem, 8vmin, 4rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 400px;
 }
 
-.instructions-panel::-webkit-scrollbar {
-  width: 10px;
+/* Specific feedback colors from JS */
+.feedback-message.success {
+  color: var(--success-color);
+  background-color: rgba(76, 175, 80, 0.1);
+}
+.feedback-message.error {
+  color: var(--error-color);
+  background-color: rgba(244, 67, 54, 0.1);
+}
+.feedback-message.info {
+  color: var(--primary-brand);
+  background-color: rgba(106, 5, 173, 0.08);
 }
 
-.instructions-panel::-webkit-scrollbar-track {
-  background: transparent;
+
+.feedback-message:not(:empty) {
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-.instructions-panel::-webkit-scrollbar-thumb {
-  background-color: var(--primary-brand);
-  border-radius: 6px;
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Flame Section */
+.flame-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.5rem, 2vmin, 1.2rem);
+  margin-top: clamp(0.8rem, 3vmin, 2rem);
+  flex-shrink: 0;
+}
+
+.flame-container {
+  width: clamp(55px, 15vmin, 100px);
+  height: clamp(55px, 15vmin, 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flame {
+  width: clamp(45px, 12vmin, 90px);
+  height: clamp(45px, 12vmin, 90px);
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  transform-origin: center bottom;
+  will-change: width, height, filter;
+  overflow: hidden; /* Garante que a pseudo-classe não vaze */
+}
+
+.flame::after {
+  content: '🔥'; /* O emoji é mantido como base */
+  position: absolute;
+  font-size: clamp(1.6rem, 10vw, 4rem);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 10px rgba(255,165,0,0.8));
+  transition: all 0.3s ease;
+  z-index: 2; /* Acima do inner flame */
+}
+
+.flame-inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255, 200, 0, 0.9) 0%, rgba(255, 100, 0, 0.7) 30%, rgba(255, 0, 0, 0.4) 60%, transparent 100%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    filter: blur(8px);
+    opacity: 0.9;
+    animation: pulse 1.5s ease-in-out infinite alternate;
+    z-index: 1; /* Abaixo do emoji */
+}
+
+.flame.flame-success .flame-inner {
+  filter: blur(5px) brightness(1.2); /* Mais brilho para sucesso */
+  background: radial-gradient(circle at center, rgba(144, 238, 144, 0.9) 0%, rgba(60, 179, 113, 0.7) 50%, transparent 100%);
+}
+
+.flame.flame-error .flame-inner {
+  filter: blur(5px) grayscale(0.8); /* Menos brilho para erro */
+  background: radial-gradient(circle at center, rgba(255, 100, 0, 0.7) 0%, rgba(255, 0, 0, 0.5) 50%, transparent 100%);
+}
+
+
+@keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.85; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.85; }
+}
+
+.streak-counter {
+  font-weight: 700;
+  color: var(--primary-brand);
+  font-size: clamp(0.8rem, 3.5vw, 1.5rem);
+  letter-spacing: 0.5px;
+}
+
+/* Leaderboard Styles */
+.leaderboard-panel {
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.leaderboard-list {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.leaderboard-list li {
+    background-color: var(--bg-main);
+    border-left: 4px solid var(--primary-light);
+    padding: 0.8rem 1.2rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.leaderboard-list li span:first-child {
+    font-weight: 700;
+    color: var(--primary-brand);
+}
+
+/* Media query para telas largas/paisagem com aspect ratio */
+@media (min-aspect-ratio: 1/1) and (min-width: 768px) {
+  body {
+    padding: 0.2vmin;
+  }
+
+  .card {
+    max-width: 90vw;
+    max-height: 99vh;
+    padding: clamp(0.8rem, 3.5vh, 2.5rem);
+  }
+
+  .game-container {
+    justify-content: center;
+    flex-grow: 1;
+    min-height: clamp(180px, 40vh, 400px);
+  }
+
+  .welcome-panel, .leaderboard-panel {
+      padding: clamp(1rem, 4vh, 2rem);
+  }
+}
+
+/* Media query para alturas muito pequenas (e largura não tão grande) */
+@media (max-height: 550px) and (max-width: 800px) {
+    .card {
+        padding: clamp(0.5rem, 2.5vmin, 1.5rem);
+        border-radius: 15px;
+    }
+    h1 {
+        font-size: clamp(1.2rem, 4.5vw, 2.5rem);
+    }
+    .subtitle {
+        font-size: clamp(0.6rem, 2vw, 1rem);
+    }
+    .btn, input[type="text"], input[type="number"], .number, .feedback-message, .leaderboard-list li {
+        font-size: clamp(0.7rem, 2.5vw, 1.1rem);
+        padding: clamp(0.6rem, 2vmin, 1rem);
+    }
+    .game-container, .welcome-panel, .leaderboard-panel {
+        gap: clamp(0.5rem, 1.8vmin, 1rem);
+        min-height: clamp(150px, 30vh, 300px);
+    }
+    .flame-container, .flame {
+        width: clamp(45px, 10vmin, 80px);
+        height: clamp(45px, 10vmin, 80px);
+    }
+    .flame::after {
+        font-size: clamp(1.4rem, 8vw, 3rem);
+    }
+    .streak-counter {
+        font-size: clamp(0.8rem, 3vw, 1.2rem);
+    }
+    .feedback-message {
+        min-height: clamp(2rem, 6vmin, 3rem);
+    }
 }
