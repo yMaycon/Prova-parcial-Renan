@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
-<body>
+<body class="theme-light">
   <div class="background"></div>
 
   <main class="card animate__animated animate__fadeIn">
@@ -25,6 +25,10 @@
           Começar Treinamento
         </button>
       </div>
+      <button id="viewLeaderboardBtn" class="btn btn-verify mt-2">
+        <span class="btn-icon">🏆</span>
+        Ver Placar de Líderes
+      </button>
     </div>
 
     <div id="game-panel" class="game-panel is-hidden">
@@ -62,6 +66,10 @@
           </div>
           <div class="streak-counter">Acertos: <span id="streak">0</span></div>
         </div>
+        <button id="showLeaderboardFromGame" class="btn btn-verify mt-2">
+          <span class="btn-icon">🏆</span>
+          Ver Placar de Líderes
+        </button>
       </div>
     </div>
 
@@ -71,8 +79,13 @@
         </div>
         <ol id="leaderboard-list" class="leaderboard-list"></ol>
         <button id="backToGameBtn" class="btn btn-generate">Voltar ao Treinamento</button>
+        <button id="backToWelcomeFromLeaderboardBtn" class="btn btn-verify mt-2">Voltar à Tela Inicial</button>
     </div>
   </main>
+
+  <button id="themeToggle" class="theme-toggle">
+    <span class="theme-toggle-icon">🌙</span>
+  </button>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   <script src="script.js"></script>

@@ -1,18 +1,43 @@
-/* New Color Palette */
+/* New Color Palette - Light Theme (Green) */
 :root {
-  --primary-brand: #6a05ad; /* Deep Purple */
-  --primary-light: #8e2de2; /* Lighter Purple for gradients */
-  --secondary-accent: #00bcd4; /* Cyan/Teal for highlights */
-  --success-color: #4caf50; /* Green for success */
-  --error-color: #f44336; /* Red for errors */
-  --text-dark: #2c3e50; /* Darker text */
-  --text-light: #ecf0f1; /* Light text on dark backgrounds */
-  --bg-main: #f0f2f5; /* Light grey background */
+  --primary-brand: #28a745; /* Green */
+  --primary-light: #218838; /* Darker Green for gradients */
+  --secondary-accent: #17a2b8; /* Teal/Cyan for highlights */
+  --success-color: #28a745; /* Green for success */
+  --error-color: #dc3545; /* Red for errors */
+  --text-dark: #343a40; /* Darker text */
+  --text-light: #ffffff; /* Light text on dark backgrounds */
+  --bg-main: #e2f0d9; /* Light green background */
   --bg-card: #ffffff; /* White card background */
-  --border-color: #dfe6e9; /* Light border */
+  --border-color: #c3e6cb; /* Light green border */
   --shadow-light: rgba(0, 0, 0, 0.08);
   --shadow-medium: rgba(0, 0, 0, 0.15);
+  --bg-gradient-start: #e0eafc;
+  --bg-gradient-end: #cfdef3;
+  --bg-radial-circle1-color: rgba(40, 167, 69, 0.08); /* Green tint */
+  --bg-radial-circle2-color: rgba(23, 162, 184, 0.08); /* Teal tint */
 }
+
+/* Dark Theme */
+body.dark-theme {
+  --primary-brand: #8e2de2; /* Lighter Purple for dark theme primary */
+  --primary-light: #a766ed; /* Even lighter purple */
+  --secondary-accent: #00bcd4; /* Cyan/Teal (mantido) */
+  --success-color: #4CAF50; /* Green (mantido) */
+  --error-color: #F44336; /* Red (mantido) */
+  --text-dark: #ecf0f1; /* Light text */
+  --text-light: #2c3e50; /* Dark text on light elements (e.g. some buttons) */
+  --bg-main: #34495e; /* Dark blue-gray */
+  --bg-card: #2c3e50; /* Darker blue-gray */
+  --border-color: #5d6d7e; /* Medium gray border */
+  --shadow-light: rgba(0, 0, 0, 0.2);
+  --shadow-medium: rgba(0, 0, 0, 0.4);
+  --bg-gradient-start: #2c3e50;
+  --bg-gradient-end: #34495e;
+  --bg-radial-circle1-color: rgba(142, 45, 226, 0.08); /* Purple tint */
+  --bg-radial-circle2-color: rgba(0, 188, 212, 0.08); /* Cyan tint */
+}
+
 
 /* Base Styles */
 * {
@@ -24,7 +49,7 @@
 body {
   font-family: 'Inter', sans-serif;
   min-height: 100svh;
-  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,6 +57,7 @@ body {
   line-height: 1.6;
   padding: 0.5vmin;
   overflow: hidden;
+  transition: background-color 0.5s ease, color 0.5s ease; /* Transição suave para o tema */
 }
 
 /* Dynamic Background Circles */
@@ -39,8 +65,8 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 15% 25%, rgba(106, 5, 173, 0.08) 0%, transparent 40%),
-              radial-gradient(circle at 85% 75%, rgba(0, 188, 212, 0.08) 0%, transparent 40%);
+  background: radial-gradient(circle at 15% 25%, var(--bg-radial-circle1-color) 0%, transparent 40%),
+              radial-gradient(circle at 85% 75%, var(--bg-radial-circle2-color) 0%, transparent 40%);
   animation: backgroundFlow 30s ease-in-out infinite alternate;
   z-index: 0;
 }
@@ -64,7 +90,7 @@ body {
   min-width: 280px;
   box-shadow: 0 15px 35px var(--shadow-medium);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease, background-color 0.5s ease;
   overflow: hidden;
 
   display: flex;
@@ -93,15 +119,17 @@ h1 {
   margin-bottom: 0.5vmin;
   font-weight: 800;
   letter-spacing: -0.8px;
+  transition: background 0.5s ease; /* Transição suave para o gradiente */
 }
 
 .subtitle {
-  color: #7f8c8d;
+  color: var(--text-dark); /* Ajustado para var do tema */
   font-size: clamp(0.7rem, 2.5vw, 1.2rem);
   line-height: 1.4;
+  transition: color 0.5s ease;
 }
 
-/* NOVO: Estilos para os painéis */
+/* Painéis */
 .welcome-panel, .game-panel, .leaderboard-panel {
     display: flex;
     flex-direction: column;
@@ -143,7 +171,7 @@ h1 {
   font-weight: 700;
   font-size: clamp(0.8rem, 2.8vw, 1.3rem);
   cursor: pointer;
-  transition: all 0.3s ease, transform 0.2s ease-out;
+  transition: all 0.3s ease, transform 0.2s ease-out, background 0.5s ease, color 0.5s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,9 +238,10 @@ h1 {
 }
 
 .countdown-message {
+  color: var(--text-dark); /* Ajustado para var do tema */
   font-size: clamp(0.8rem, 2.5vw, 1.1rem);
-  color: #7f8c8d;
   min-height: 1.5em; /* Garante que o espaço seja reservado */
+  transition: color 0.5s ease;
 }
 
 .number {
@@ -224,6 +253,7 @@ h1 {
   border-left: 4px solid var(--secondary-accent);
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
   color: var(--primary-brand);
+  transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
 }
 
 /* Input Group */
@@ -246,19 +276,21 @@ input[type="number"] {
   color: var(--text-dark);
   background-color: var(--bg-card);
   text-align: center;
+  transition: border-color 0.5s ease, box-shadow 0.5s ease, background-color 0.5s ease, color 0.5s ease;
 }
 
 input[type="text"]::placeholder,
 input[type="number"]::placeholder {
-  color: #b2bec3;
+  color: var(--text-dark); /* Ajustado para var do tema */
+  opacity: 0.7;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus {
   border-color: var(--primary-brand);
-  box-shadow: 0 0 0 4px rgba(106, 5, 173, 0.2);
+  box-shadow: 0 0 0 4px rgba(106, 5, 173, 0.2); /* Sombra ainda usa purple */
   outline: none;
-  background-color: #f8f8f8;
+  background-color: var(--bg-main); /* Ajustado para var do tema */
 }
 
 /* Feedback Message */
@@ -272,7 +304,7 @@ input[type="number"]:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, background-color 0.5s ease, color 0.5s ease;
   width: 100%;
   max-width: 400px;
 }
@@ -288,7 +320,7 @@ input[type="number"]:focus {
 }
 .feedback-message.info {
   color: var(--primary-brand);
-  background-color: rgba(106, 5, 173, 0.08);
+  background-color: var(--bg-radial-circle1-color); /* Usando uma cor do tema */
 }
 
 
@@ -326,11 +358,11 @@ input[type="number"]:focus {
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
   transform-origin: center bottom;
   will-change: width, height, filter;
-  overflow: hidden; /* Garante que a pseudo-classe não vaze */
+  overflow: hidden;
 }
 
 .flame::after {
-  content: '🔥'; /* O emoji é mantido como base */
+  content: '🔥';
   position: absolute;
   font-size: clamp(1.6rem, 10vw, 4rem);
   top: 50%;
@@ -338,7 +370,7 @@ input[type="number"]:focus {
   transform: translate(-50%, -50%);
   filter: drop-shadow(0 0 10px rgba(255,165,0,0.8));
   transition: all 0.3s ease;
-  z-index: 2; /* Acima do inner flame */
+  z-index: 2;
 }
 
 .flame-inner {
@@ -350,16 +382,17 @@ input[type="number"]:focus {
     filter: blur(8px);
     opacity: 0.9;
     animation: pulse 1.5s ease-in-out infinite alternate;
-    z-index: 1; /* Abaixo do emoji */
+    z-index: 1;
+    transition: background 0.5s ease, filter 0.5s ease;
 }
 
 .flame.flame-success .flame-inner {
-  filter: blur(5px) brightness(1.2); /* Mais brilho para sucesso */
+  filter: blur(5px) brightness(1.2);
   background: radial-gradient(circle at center, rgba(144, 238, 144, 0.9) 0%, rgba(60, 179, 113, 0.7) 50%, transparent 100%);
 }
 
 .flame.flame-error .flame-inner {
-  filter: blur(5px) grayscale(0.8); /* Menos brilho para erro */
+  filter: blur(5px) grayscale(0.8);
   background: radial-gradient(circle at center, rgba(255, 100, 0, 0.7) 0%, rgba(255, 0, 0, 0.5) 50%, transparent 100%);
 }
 
@@ -375,6 +408,7 @@ input[type="number"]:focus {
   color: var(--primary-brand);
   font-size: clamp(0.8rem, 3.5vw, 1.5rem);
   letter-spacing: 0.5px;
+  transition: color 0.5s ease;
 }
 
 /* Leaderboard Styles */
@@ -404,11 +438,43 @@ input[type="number"]:focus {
     font-size: clamp(0.9rem, 3vw, 1.2rem);
     font-weight: 500;
     color: var(--text-dark);
+    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
 }
 
 .leaderboard-list li span:first-child {
     font-weight: 700;
     color: var(--primary-brand);
+    transition: color 0.5s ease;
+}
+
+.mt-2 {
+  margin-top: 1.2rem;
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--primary-brand);
+  color: var(--text-light);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px var(--shadow-medium);
+  transition: background-color 0.3s ease, transform 0.2s ease-out;
+  z-index: 100;
+}
+
+.theme-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px var(--shadow-medium);
 }
 
 /* Media query para telas largas/paisagem com aspect ratio */

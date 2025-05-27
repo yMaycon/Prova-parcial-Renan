@@ -4,6 +4,8 @@ const gamePanel = document.getElementById('game-panel');
 const leaderboardPanel = document.getElementById('leaderboard-panel');
 const playerNameInput = document.getElementById('playerName');
 const startGameBtn = document.getElementById('startGameBtn');
+const viewLeaderboardBtn = document.getElementById('viewLeaderboardBtn'); // Novo botão para ver placar na tela inicial
+const showLeaderboardFromGameBtn = document.getElementById('showLeaderboardFromGame'); // Novo botão para ver placar no jogo
 const generateBtn = document.getElementById('generate');
 const num1Display = document.getElementById('num1');
 const num2Display = document.getElementById('num2');
@@ -16,6 +18,8 @@ const flame = document.getElementById('flame');
 const streakCounter = document.getElementById('streak');
 const leaderboardList = document.getElementById('leaderboard-list');
 const backToGameBtn = document.getElementById('backToGameBtn');
+const backToWelcomeFromLeaderboardBtn = document.getElementById('backToWelcomeFromLeaderboardBtn'); // Novo botão para voltar à tela inicial do placar
+const themeToggleBtn = document.getElementById('theme-toggle'); // Botão de alternância de tema
 
 // Variáveis do jogo
 let correctSum = 0;
@@ -24,7 +28,7 @@ let currentPlayerName = 'Visitante';
 let isVerifying = false;
 let countdownInterval;
 let currentScore = 0; // Usado para o placar de líderes
-const WEBHOOK_URL = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXOPE3c331zLjzBrXYJzPv589YeLSo3Hhn0G7ZAuEb7BqLByelvoC3AKvp8IzyP'; // Certifique-se de que este URL esteja correto
+const WEBHOOK_URL = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXOPE3c331zLjzBrXYJzPv589YeLSoz3Hhn0G7ZAuEb7BqLByelvoC3AKvp8IzyP';
 
 // Sons
 const soundCorrect = typeof Howl !== 'undefined' ? new Howl({ src: ['assets/correct.mp3'], volume: 0.7 }) : null;
@@ -33,9 +37,12 @@ const soundWrong = typeof Howl !== 'undefined' ? new Howl({ src: ['assets/wrong.
 // Função para exibir mensagens de feedback
 function showFeedback(message, type = 'info', icon = '') {
     feedbackMessage.textContent = icon + ' ' + message;
-    feedbackMessage.className = 'feedback-message ' + type; // Remove classes antigas e adiciona a nova
+    // Remove todas as classes de tipo antes de adicionar a nova para evitar conflitos
+    feedbackMessage.classList.remove('success', 'error', 'info');
+    feedbackMessage.classList.add(type);
+    // Reinicia a animação
     feedbackMessage.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
-    void feedbackMessage.offsetWidth; // Trigger reflow
+    void feedbackMessage.offsetWidth; // Força o reflow para reiniciar a animação
     feedbackMessage.classList.add('animate__animated', 'animate__bounceIn');
 }
 
@@ -64,8 +71,7 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
-            // Use keepalive para beforeunload para maior confiabilidade
-            keepalive: true
+            keepalive: true // Tenta garantir que o webhook seja enviado mesmo se a página for fechada
         });
         if (!response.ok) {
             console.error('Erro ao enviar webhook:', response.status, await response.text());
@@ -95,6 +101,8 @@ function saveLeaderboard(leaderboard) {
 }
 
 function updateLeaderboard(playerName, score) {
+    if (!playerName || score === undefined) return; // Garante que os dados sejam válidos
+
     const leaderboard = getLeaderboard();
     const existingPlayerIndex = leaderboard.findIndex(entry => entry.name === playerName);
 
@@ -112,9 +120,9 @@ function updateLeaderboard(playerName, score) {
 
 function renderLeaderboard() {
     const leaderboard = getLeaderboard();
-    leaderboardList.innerHTML = '';
+    leaderboardList.innerHTML = ''; // Limpa a lista antes de renderizar
     if (leaderboard.length === 0) {
-        leaderboardList.innerHTML = '<p>Nenhuma pontuação registrada ainda.</p>';
+        leaderboardList.innerHTML = '<li>Nenhuma pontuação registrada ainda.</li>';
         return;
     }
     leaderboard.forEach((entry, index) => {
@@ -125,8 +133,8 @@ function renderLeaderboard() {
 }
 
 function showLeaderboard() {
-    gamePanel.classList.add('is-hidden');
     welcomePanel.classList.add('is-hidden');
+    gamePanel.classList.add('is-hidden');
     leaderboardPanel.classList.remove('is-hidden');
     renderLeaderboard();
 }
@@ -134,6 +142,13 @@ function showLeaderboard() {
 function hideLeaderboard() {
     leaderboardPanel.classList.add('is-hidden');
     gamePanel.classList.remove('is-hidden'); // Volta para o painel do jogo
+}
+
+function backToWelcome() {
+    leaderboardPanel.classList.add('is-hidden');
+    gamePanel.classList.add('is-hidden');
+    welcomePanel.classList.remove('is-hidden');
+    playerNameInput.focus();
 }
 
 
@@ -158,8 +173,9 @@ function generateNumbers() {
     correctSum = num1 + num2;
 
     num1Display.textContent = `Primeiro número: ${num1}`;
+    // Reinicia a animação para num1
     num1Display.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
-    void num1Display.offsetWidth; // Trigger reflow
+    void num1Display.offsetWidth; // Força o reflow
     num1Display.classList.add('animate__animated', 'animate__bounceIn');
 
     numbersDisplayContainer.classList.remove('is-hidden'); // Garante que esteja visível
@@ -174,8 +190,9 @@ function generateNumbers() {
             clearInterval(countdownInterval);
             countdownDisplay.textContent = ''; // Limpa a mensagem de countdown
             num2Display.textContent = `Segundo número: ${num2}`;
+            // Reinicia a animação para num2
             num2Display.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
-            void num2Display.offsetWidth; // Trigger reflow
+            void num2Display.offsetWidth; // Força o reflow
             num2Display.classList.add('animate__animated', 'animate__bounceIn');
 
             answerInput.disabled = false; // Habilita o input e botão
@@ -227,7 +244,7 @@ function verifyAnswer() {
 
     let messageTitle = '';
     let messageDescription = '';
-    let messageColor = 0x6A05AD;
+    let messageColor = 0x6A05AD; // Cor padrão
 
     if (userAnswer === correctSum) {
         streak++;
@@ -241,7 +258,7 @@ function verifyAnswer() {
         const num1 = parseInt(num1Display.textContent.replace('Primeiro número: ', ''));
         const num2 = parseInt(num2Display.textContent.replace('Segundo número: ', ''));
         messageDescription = `O(a) jogador(a) **${currentPlayerName}** acertou a soma! (${num1} + ${num2} = ${correctSum})\nAcertos Consecutivos: **${streak}**\nPontuação atual: **${currentScore}**`;
-        messageColor = 0x4CAF50;
+        messageColor = 0x4CAF50; // Verde para sucesso
     } else {
         streak = 0;
         streakCounter.textContent = streak;
@@ -253,7 +270,7 @@ function verifyAnswer() {
         const num1 = parseInt(num1Display.textContent.replace('Primeiro número: ', ''));
         const num2 = parseInt(num2Display.textContent.replace('Segundo número: ', ''));
         messageDescription = `O(a) jogador(a) **${currentPlayerName}** errou a soma. A resposta para ${num1} + ${num2} era ${correctSum}, mas digitou ${userAnswer}.\nAcertos Consecutivos: **${streak}**\nPontuação final da rodada: **${currentScore}**`;
-        messageColor = 0xF44336;
+        messageColor = 0xF44336; // Vermelho para erro
 
         updateLeaderboard(currentPlayerName, currentScore); // Atualiza o placar
         currentScore = 0; // Reseta a pontuação do jogo atual
@@ -273,6 +290,22 @@ function verifyAnswer() {
         isVerifying = false; // Libera a verificação
         generateNumbers(); // Gera novos números
     }, 1500);
+}
+
+// Lógica de alternância de tema
+function toggleTheme() {
+    const body = document.body;
+    if (body.classList.contains('light-theme')) {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        themeToggleBtn.textContent = '🌙';
+        localStorage.setItem('theme', 'dark');
+    } else {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        themeToggleBtn.textContent = '☀️';
+        localStorage.setItem('theme', 'light');
+    }
 }
 
 // Event Listeners
@@ -295,9 +328,14 @@ startGameBtn.addEventListener('click', () => {
     }
 });
 
+viewLeaderboardBtn.addEventListener('click', showLeaderboard);
+showLeaderboardFromGameBtn.addEventListener('click', showLeaderboard);
+backToGameBtn.addEventListener('click', hideLeaderboard);
+backToWelcomeFromLeaderboardBtn.addEventListener('click', backToWelcome);
+themeToggleBtn.addEventListener('click', toggleTheme); // Adiciona listener para o botão de tema
+
 generateBtn.addEventListener('click', generateNumbers);
 verifyBtn.addEventListener('click', verifyAnswer);
-backToGameBtn.addEventListener('click', hideLeaderboard); // Botão de voltar ao jogo
 
 answerInput.addEventListener('keypress', (event) => {
     if (event.key === 'Enter' && !isVerifying) verifyAnswer();
@@ -308,27 +346,32 @@ playerNameInput.addEventListener('keypress', (event) => {
 });
 
 // Melhoria na lógica de beforeunload
-window.addEventListener('beforeunload', () => {
+window.addEventListener('beforeunload', (event) => {
     // Se o jogador não for "Visitante" e tiver algum acerto na sessão atual
     if (currentPlayerName !== 'Visitante' && currentScore > 0) {
         updateLeaderboard(currentPlayerName, currentScore); // Garante que a pontuação final seja salva
+        // Envia o webhook de forma assíncrona com keepalive
         sendDiscordWebhook('Renan\'s Bot', {
             title: 'Sessão de Treinamento Encerrada!',
             description: `O(a) jogador(a) **${currentPlayerName}** encerrou o treinamento com **${currentScore}** acertos totais.`
         }, 0x6A05AD);
     }
-});
-
-// Evento para mostrar o leaderboard ao clicar no título do jogo (exemplo)
-// Ou você pode adicionar um botão dedicado para o leaderboard
-document.querySelector('.card-header h1').addEventListener('click', () => {
-    if (!gamePanel.classList.contains('is-hidden')) { // Apenas se estiver no painel do jogo
-        showLeaderboard();
-    }
+    // Não retorne nada ou retorne indefinido para permitir o fechamento padrão do navegador.
+    // O evento `beforeunload` é principalmente para avisar o usuário, não para atrasar o fechamento.
 });
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Carrega o tema salvo do localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggleBtn.textContent = '🌙';
+    } else {
+        document.body.classList.add('light-theme');
+        themeToggleBtn.textContent = '☀️';
+    }
+
     welcomePanel.classList.remove('is-hidden');
     gamePanel.classList.add('is-hidden'); // Garante que o painel do jogo esteja oculto no início
     leaderboardPanel.classList.add('is-hidden'); // Garante que o painel do placar esteja oculto
