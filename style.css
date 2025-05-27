@@ -79,7 +79,7 @@ body {
   color: var(--text-dark);
   line-height: 1.6;
   padding: 0.5vmin;
-  overflow: hidden; /* Mantém o overflow oculto para o corpo, já que o flame-section é fixo */
+  overflow: hidden;
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
@@ -360,21 +360,14 @@ input[type="number"]:focus {
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* Flame Section - FLUTUANTE */
-#flame-section-floating { /* Usando o novo ID para a seção flutuante */
-    position: fixed; /* Torna o elemento fixo na tela */
-    top: 10%; /* Posição inicial no topo */
-    left: 80%; /* Posição inicial na direita */
-    width: auto; /* Largura automática */
-    height: auto; /* Altura automática */
-    z-index: 50; /* Garante que fique acima de outros elementos */
-    pointer-events: none; /* Impede que o elemento capture eventos de mouse */
-    animation: floatAndRotate 8s linear infinite, pulseFlame 2s ease-in-out infinite alternate; /* Animações */
-    transform-origin: center center; /* Ponto de origem para rotação */
-    display: flex; /* Para alinhar o fogo e o contador */
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem; /* Pequeno espaçamento entre o fogo e o contador */
+/* Flame Section */
+.flame-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.5rem, 2vmin, 1.2rem);
+  margin-top: clamp(0.8rem, 3vmin, 2rem);
+  flex-shrink: 0;
 }
 
 .flame-container {
@@ -428,20 +421,6 @@ input[type="number"]:focus {
 .flame.flame-error .flame-inner {
   filter: blur(5px) grayscale(0.8);
   background: radial-gradient(circle at center, rgba(255, 100, 0, 0.7) 0%, rgba(255, 0, 0, 0.5) 50%, transparent 100%);
-}
-
-/* Animações para o foguinho flutuante */
-@keyframes floatAndRotate {
-    0% { top: 10%; left: 80%; transform: translate(0, 0) rotate(0deg); }
-    25% { top: 15%; left: 90%; transform: translate(10px, -5px) rotate(10deg); }
-    50% { top: 20%; left: 85%; transform: translate(-10px, 5px) rotate(-5deg); }
-    75% { top: 15%; left: 75%; transform: translate(5px, -10px) rotate(10deg); }
-    100% { top: 10%; left: 80%; transform: translate(0, 0) rotate(0deg); }
-}
-
-@keyframes pulseFlame {
-    0% { transform: scale(1); opacity: 0.9; }
-    100% { transform: scale(1.05); opacity: 1; }
 }
 
 
@@ -577,12 +556,12 @@ body.dark-theme .theme-toggle-btn {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Menu Toggle Button (Topo da tela) */
+/* Menu Toggle Button (Novo) - Modificado */
 .menu-toggle-btn {
   position: fixed;
   top: 20px; /* Posição no topo */
   left: 20px;
-  background-color: var(--primary-brand); /* Cor primária do tema */
+  background-color: var(--primary-brand);
   color: var(--text-light);
   border: none;
   border-radius: 50%;
@@ -596,79 +575,93 @@ body.dark-theme .theme-toggle-btn {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s ease, transform 0.2s ease-out, box-shadow 0.3s ease, filter 0.3s ease;
   z-index: 100;
-  filter: drop-shadow(0 0 8px rgba(46, 125, 50, 0.5)); /* Brilho baseado na cor primária */
+  filter: drop-shadow(0 0 8px rgba(46, 125, 50, 0.5));
 }
 
 body.dark-theme .menu-toggle-btn {
-    background-color: var(--primary-brand);
-    filter: drop-shadow(0 0 8px rgba(123, 31, 162, 0.5));
+  background-color: var(--primary-brand);
+  filter: drop-shadow(0 0 8px rgba(123, 31, 162, 0.5));
 }
 
 .menu-toggle-btn:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Side Menu (Desliza da esquerda) */
+/* Side Menu (Novo) - Modificado */
 .side-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 280px; /* Largura do menu */
-    height: 100%;
-    background-color: var(--bg-card);
-    box-shadow: 5px 0 15px var(--shadow-medium);
-    z-index: 200;
-    transition: transform 0.3s ease-out; /* Animação de entrada/saída */
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    border-right: 1px solid var(--border-color);
-    transform: translateX(-100%); /* Escondido por padrão */
+  position: fixed;
+  top: 0;
+  left: 0; /* Inicialmente visível */
+  width: 280px; /* Largura do menu */
+  height: 100%;
+  background-color: var(--bg-card);
+  box-shadow: 5px 0 15px var(--shadow-medium);
+  z-index: 200;
+  transition: transform 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-right: 1px solid var(--border-color);
+  transform: translateX(-100%); /* Esconde inicialmente */
 }
 
 .side-menu.is-open {
-    transform: translateX(0); /* Abre o menu */
+  transform: translateX(0); /* Abre o menu */
 }
 
-/* Removed o close-menu-btn do HTML, então não precisamos mais do CSS dele aqui */
-
-.menu-nav ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 60px; /* Para dar espaço ao botão de menu do topo */
-}
-
-.menu-nav-item {
-    background-color: transparent;
+.close-menu-btn {
+    align-self: flex-end;
+    background: none;
     border: none;
-    width: 100%;
-    text-align: left;
-    padding: 1rem 1.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 28px;
     color: var(--text-dark);
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.menu-nav-item i {
-    font-size: 1.3rem;
-    color: var(--primary-brand);
+    padding: 0.5rem;
+    margin-bottom: 1rem;
     transition: color 0.3s ease;
 }
 
+.close-menu-btn:hover {
+    color: var(--error-color);
+}
+
+.menu-nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+
+.menu-nav-item {
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu-nav-item i {
+  font-size: 1.3rem;
+  color: var(--primary-brand);
+  transition: color 0.3s ease;
+}
+
 .menu-nav-item:hover {
-    background-color: var(--bg-main);
-    color: var(--primary-brand);
+  background-color: var(--bg-main);
+  color: var(--primary-brand);
 }
 
 .menu-nav-item:hover i {
-    color: var(--primary-light);
+  color: var(--primary-light);
 }
 
 
@@ -692,11 +685,6 @@ body.dark-theme .menu-toggle-btn {
 
   .welcome-panel, .leaderboard-panel, .change-name-panel {
       padding: clamp(1rem, 4vh, 2rem);
-  }
-
-  #flame-section-floating {
-    top: 5%; /* Ajusta a posição em telas maiores */
-    left: 85%;
   }
 }
 
@@ -737,14 +725,5 @@ body.dark-theme .menu-toggle-btn {
         width: 45px;
         height: 45px;
         font-size: 22px;
-    }
-    .menu-nav ul {
-        margin-top: 50px; /* Ajusta o espaçamento para telas menores */
-    }
-
-    #flame-section-floating {
-        top: 2%; /* Ajusta a posição em telas menores */
-        left: 70%;
-        transform: scale(0.8); /* Reduz o tamanho em telas menores */
     }
 }
