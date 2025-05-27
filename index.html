@@ -9,6 +9,89 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Atualizar posição do botão de menu lateral */
+    .menu-toggle-btn {
+      position: fixed;
+      top: 10px; /* Centralizado no topo */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+    }
+
+    /* Estilo para o foguinho voador */
+    .flame-floating {
+      position: fixed;
+      width: clamp(45px, 12vmin, 90px);
+      height: clamp(45px, 12vmin, 90px);
+      animation: flyAround 10s infinite ease-in-out;
+      z-index: 150;
+    }
+
+    /* Animação para o foguinho voar */
+    @keyframes flyAround {
+      0% {
+        transform: translate(10vw, 10vh) scale(1);
+      }
+      25% {
+        transform: translate(80vw, 20vh) scale(1.1);
+      }
+      50% {
+        transform: translate(50vw, 70vh) scale(0.9);
+      }
+      75% {
+        transform: translate(20vw, 50vh) scale(1.2);
+      }
+      100% {
+        transform: translate(10vw, 10vh) scale(1);
+      }
+    }
+
+    /* Garantir que o <main> esteja centralizado e não sobreponha outros elementos */
+    main.card {
+      position: relative;
+      margin: 0 auto;
+      max-width: 800px;
+      padding: 20px;
+      z-index: 100; /* Certifique-se de que ele não sobreponha o botão da barra lateral */
+    }
+
+    /* Corrigir o botão da barra lateral para que fique sempre visível */
+    .menu-toggle-btn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 200; /* Certifique-se de que ele esteja acima de outros elementos */
+      background-color: #fff; /* Adicione um fundo para melhor visibilidade */
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+
+    .menu-toggle-btn:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* Ajustar a barra lateral para que não sobreponha o botão */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #333;
+      color: #fff;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+      z-index: 150;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+    }
+  </style>
 </head>
 <body class="light-theme">
   <div class="background"></div>
@@ -116,5 +199,30 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   <script src="script.js"></script>
+  <script>
+    // Criar o foguinho flutuante
+    document.addEventListener('DOMContentLoaded', () => {
+      const floatingFlame = document.createElement('div');
+      floatingFlame.classList.add('flame', 'flame-floating');
+      const flameInner = document.createElement('div');
+      flameInner.classList.add('flame-inner');
+      floatingFlame.appendChild(flameInner);
+      document.body.appendChild(floatingFlame);
+    });
+
+    // Selecionar o botão e a barra lateral
+    const menuToggleBtn = document.querySelector('.menu-toggle-btn');
+    const sidebar = document.querySelector('.sidebar');
+
+    // Alternar a barra lateral ao clicar no botão
+    menuToggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+
+    // Garantir que o botão esteja sempre visível
+    document.addEventListener('DOMContentLoaded', () => {
+      menuToggleBtn.style.display = 'block';
+    });
+  </script>
 </body>
 </html>
