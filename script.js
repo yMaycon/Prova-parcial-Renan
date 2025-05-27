@@ -298,12 +298,12 @@ function toggleTheme() {
     if (body.classList.contains('light-theme')) {
         body.classList.remove('light-theme');
         body.classList.add('dark-theme');
-        themeToggleBtn.textContent = '🌙';
+        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>'; // Altera para ícone de sol
         localStorage.setItem('theme', 'dark');
     } else {
         body.classList.remove('dark-theme');
         body.classList.add('light-theme');
-        themeToggleBtn.textContent = '☀️';
+        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>'; // Altera para ícone de lua
         localStorage.setItem('theme', 'light');
     }
 }
@@ -366,10 +366,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
-        themeToggleBtn.textContent = '🌙';
+        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>'; // Ícone de sol para indicar que está no tema escuro
     } else {
         document.body.classList.add('light-theme');
-        themeToggleBtn.textContent = '☀️';
+        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>'; // Ícone de lua para indicar que está no tema claro
     }
 
     welcomePanel.classList.remove('is-hidden');

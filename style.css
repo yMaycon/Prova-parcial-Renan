@@ -456,25 +456,40 @@ input[type="number"]:focus {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: var(--primary-brand);
-  color: var(--text-light);
+  /* Cor de fundo base para o botão, que pode ser afetada pelo tema */
+  background-color: var(--secondary-accent);
+  color: var(--text-light); /* Cor do ícone */
   border: none;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 24px;
+  width: 55px; /* Ligeiramente maior */
+  height: 55px; /* Ligeiramente maior */
+  font-size: 26px; /* Ícone maior */
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 10px var(--shadow-medium);
-  transition: background-color 0.3s ease, transform 0.2s ease-out;
+  /* Sombra para destaque */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease-out, box-shadow 0.3s ease;
   z-index: 100;
+  /* Efeito de brilho ao redor do botão */
+  filter: drop-shadow(0 0 8px rgba(0, 188, 212, 0.5)); /* Brilho baseado na cor secondary-accent */
 }
 
+body.dark-theme .theme-toggle-btn {
+    background-color: var(--primary-brand); /* Usa a cor primária do dark theme */
+    filter: drop-shadow(0 0 8px rgba(142, 45, 226, 0.5)); /* Brilho baseado na cor primary-brand do dark theme */
+}
+
+
 .theme-toggle-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px var(--shadow-medium);
+  transform: translateY(-3px) scale(1.05); /* Mais movimento no hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Sombra mais intensa no hover */
+}
+
+.theme-toggle-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Media query para telas largas/paisagem com aspect ratio */
