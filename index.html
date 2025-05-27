@@ -1,44 +1,79 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo das Perguntas</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="3A 😎">
+  <title>Prova parcial do Renan</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
-    <header>
-        <h1>Jogo das Perguntas</h1>
-        <div class="theme-toggle" id="themeToggle">
-            <i class="fas fa-moon"></i>
+  <div class="background"></div>
+
+  <main class="card animate__animated animate__fadeIn">
+    <div id="welcome-panel" class="welcome-panel">
+      <div class="card-header">
+        <h1>3º A - Prova parcial do Renan</h1>
+        <p class="subtitle">Bem-vindo(a)! Digite seu nome para começar.</p>
+      </div>
+      <div class="input-group">
+        <input type="text" id="playerName" placeholder="Seu nome" aria-label="Digite seu nome">
+        <button id="startGameBtn" class="btn btn-generate">
+          <span class="btn-icon">▶️</span>
+          Começar Prova
+        </button>
+      </div>
+    </div>
+
+    <div id="game-panel" class="game-panel hidden">
+      <div class="card-header">
+        <h1>3º A - Prova parcial do Renan</h1>
+      </div>
+
+      <div class="game-container">
+        <button id="generate" class="btn btn-generate">
+          <span class="btn-icon">🎲</span>
+          Gerar Números
+        </button>
+
+        <!-- 🆕 Barra de tempo -->
+        <div id="timerContainer" class="timer-container">
+          <div id="timerBar" class="timer-bar"></div>
         </div>
-    </header>
 
-    <main>
-        <section class="player-info">
-            <label for="playerName">Seu nome:</label>
-            <input type="text" id="playerName" placeholder="Digite seu nome">
-            <button onclick="saveName()">Salvar</button>
-        </section>
+        <div class="numbers-display hidden">
+          <p id="num1" class="number animate__animated"></p>
+          <p id="num2" class="number animate__animated"></p>
+        </div>
 
-        <section class="question-box">
-            <div id="question">Clique no botão para começar!</div>
-            <div id="countdown"></div>
-            <button onclick="nextQuestion()">Próxima Pergunta</button>
-        </section>
+        <div class="input-group">
+          <input id="answer" type="number" placeholder="Qual é o resultado?" aria-label="Resposta do resultado">
+          <button id="verify" class="btn btn-verify">
+            <span class="btn-icon">✅</span>
+            Verificar
+          </button>
+        </div>
 
-        <section class="response-buttons">
-            <button onclick="registerResponse('Sim')">Sim</button>
-            <button onclick="registerResponse('Não')">Não</button>
-        </section>
+        <div id="feedback" class="feedback-message"></div>
 
-        <section class="ranking">
-            <h2>Ranking</h2>
-            <ul id="rankingList"></ul>
-        </section>
-    </main>
+        <div class="flame-section">
+          <div class="flame-container">
+            <div id="flame" class="flame"></div>
+          </div>
+          <div class="streak-counter">Acertos: <span id="streak">0</span></div>
+        </div>
 
-    <script src="script.js"></script>
+        <!-- 🆕 Botão "Desistir" -->
+        <div class="input-group" style="margin-top: 16px;">
+          <button id="giveUpBtn" class="btn btn-secondary">Desistir</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
