@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Treinamento para a prova de matemática do Renan">
+  <meta name="description" content="Treinamento de matemática para a prova do Renan.">
   <title>Treinamento Prova do Renan</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -19,7 +19,6 @@
         <p class="subtitle">Bem-vindo(a)! Digite seu nome para começar.</p>
       </div>
       <div class="input-group">
-        <label for="playerName" class="visually-hidden">Digite seu nome</label>
         <input type="text" id="playerName" placeholder="Seu nome" aria-label="Digite seu nome">
         <button id="startGameBtn" class="btn btn-generate">
           <span class="btn-icon">▶️</span>
@@ -46,9 +45,8 @@
         </div>
 
         <div class="input-group">
-          <label for="answer" class="visually-hidden">Qual é o resultado?</label>
-          <input id="answer" type="number" placeholder="Qual é o resultado?" aria-label="Resposta do resultado" disabled>
-          <button id="verify" class="btn btn-verify" disabled>
+          <input id="answer" type="number" placeholder="Qual é o resultado?" aria-label="Resposta do resultado">
+          <button id="verify" class="btn btn-verify">
             <span class="btn-icon">✅</span>
             Verificar
           </button>
@@ -68,21 +66,12 @@
     </div>
 
     <div id="leaderboard-panel" class="leaderboard-panel is-hidden">
-      <div class="card-header">
-        <h1>🏆 Ranking de Treinamento 🏆</h1>
-      </div>
-      <ol id="leaderboard-list" class="leaderboard-list"></ol>
-      <button id="closeLeaderboardBtn" class="btn btn-generate">
-        <span class="btn-icon">↩️</span>
-        Voltar
-      </button>
+        <div class="card-header">
+            <h1>Placar de Líderes</h1>
+        </div>
+        <ol id="leaderboard-list" class="leaderboard-list"></ol>
+        <button id="backToGameBtn" class="btn btn-generate">Voltar ao Treinamento</button>
     </div>
-
-    <button id="showLeaderboardBtn" class="btn btn-leaderboard animate__animated animate__fadeInUp">
-      <span class="btn-icon">📊</span>
-      Ver Ranking
-    </button>
-
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
