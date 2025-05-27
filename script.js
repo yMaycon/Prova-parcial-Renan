@@ -12,12 +12,17 @@ const verifyBtn = document.getElementById('verify');
 const feedbackMessage = document.getElementById('feedback');
 const flame = document.getElementById('flame');
 const streakCounter = document.getElementById('streak');
+const countdownDisplay = document.getElementById('countdown');
+const themeToggle = document.getElementById('theme-toggle');
+const changeNameBtn = document.getElementById('change-name-btn');
 
 // Variáveis do jogo
 let correctSum = 0;
 let streak = 0;
-let currentPlayerName = 'Visitante';
+let currentPlayerName = localStorage.getItem('currentPlayerName') || 'Visitante';
 let isVerifying = false;
+let countdown = 5;
+let countdownInterval = null;
 const webhookUrl = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXOPE3c331zLjzBrXYJzPv589YeLSoz3Hhn0G7ZAuEb7BqLByelvoC3AKvp8IzyP';
 
 // Sons
@@ -55,8 +60,8 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
 
 // Gerar números
 function generateNumbers() {
-    answerInput.disabled = false;
-    verifyBtn.disabled = false;
+    answerInput.disabled = true;
+    verifyBtn.disabled = true;
     isVerifying = false;
 
     const num1 = Math.floor(Math.random() * 2001) - 1000;
@@ -77,12 +82,23 @@ function generateNumbers() {
     answerInput.value = '';
     answerInput.focus();
 
-    setTimeout(() => {
-        num2Display.textContent = `Segundo número: ${num2}`;
-        num2Display.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
-        void num2Display.offsetWidth;
-        num2Display.classList.add('animate__animated', 'animate__bounceIn');
-    }, 5000);
+    countdown = 5;
+    countdownDisplay.textContent = `Próximo número em ${countdown} segundos...`;
+    countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+            countdownDisplay.textContent = `Próximo número em ${countdown} segundos...`;
+        } else {
+            clearInterval(countdownInterval);
+            countdownDisplay.textContent = '';
+            num2Display.textContent = `Segundo número: ${num2}`;
+            num2Display.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
+            void num2Display.offsetWidth;
+            num2Display.classList.add('animate__animated', 'animate__bounceIn');
+            answerInput.disabled = false;
+            verifyBtn.disabled = false;
+        }
+    }, 1000);
 }
 
 function verifyAnswer() {
@@ -97,7 +113,7 @@ function verifyAnswer() {
     const num2 = parseInt(num2Display.textContent.replace('Segundo número: ', ''));
 
     if (num2Display.textContent === '') {
-        feedbackMessage.textContent = 'Aguarde o segundo número aparecer!';
+        feedbackMessage.textContent = 'Aguardando segundo número...';
         feedbackMessage.style.color = 'var(--error-color)';
         feedbackMessage.style.backgroundColor = 'rgba(244, 67, 54, 0.1)';
         isVerifying = false;
@@ -169,6 +185,7 @@ startGameBtn.addEventListener('click', () => {
     const name = playerNameInput.value.trim();
     if (name) {
         currentPlayerName = name;
+        localStorage.setItem('currentPlayerName', name);
         welcomePanel.classList.add('hidden');
         gamePanel.classList.remove('hidden');
 
@@ -195,6 +212,17 @@ playerNameInput.addEventListener('keypress', (event) => {
     if (event.key === 'Enter') startGameBtn.click();
 });
 
+changeNameBtn.addEventListener('click', () => {
+    localStorage.removeItem('currentPlayerName');
+    location.reload();
+});
+
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
+
 window.addEventListener('beforeunload', () => {
     if (currentPlayerName !== 'Visitante' && streak > 0) {
         sendDiscordWebhook('Renan\'s Bot', {
@@ -205,7 +233,17 @@ window.addEventListener('beforeunload', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    welcomePanel.classList.remove('hidden');
-    gamePanel.classList.add('hidden');
-    playerNameInput.focus();
+    if (currentPlayerName && currentPlayerName !== 'Visitante') {
+        welcomePanel.classList.add('hidden');
+        gamePanel.classList.remove('hidden');
+        generateNumbers();
+    } else {
+        welcomePanel.classList.remove('hidden');
+        gamePanel.classList.add('hidden');
+        playerNameInput.focus();
+    }
+
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
 });
