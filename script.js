@@ -1,459 +1,449 @@
-// Constantes de elementos HTML
+// Constantes e Variáveis Globais
+const body = document.body;
+const themeToggleBtn = document.getElementById('theme-toggle');
+const menuToggleBtn = document.getElementById('menu-toggle');
+const sideMenu = document.getElementById('side-menu');
+
+// Painéis do jogo
 const welcomePanel = document.getElementById('welcome-panel');
 const gamePanel = document.getElementById('game-panel');
 const leaderboardPanel = document.getElementById('leaderboard-panel');
-const changeNamePanel = document.getElementById('change-name-panel'); // Novo painel
+const changeNamePanel = document.getElementById('change-name-panel');
+
+// Elementos do painel de boas-vindas
 const playerNameInput = document.getElementById('playerName');
 const startGameBtn = document.getElementById('startGameBtn');
-const viewLeaderboardBtn = document.getElementById('viewLeaderboardBtn');
+const viewLeaderboardBtnWelcome = document.getElementById('viewLeaderboardBtn');
+
+// Elementos do painel de jogo
 const generateBtn = document.getElementById('generate');
 const num1Display = document.getElementById('num1');
 const num2Display = document.getElementById('num2');
-const numbersDisplayContainer = document.querySelector('.numbers-display');
-const countdownDisplay = document.getElementById('countdown');
+const countdownMessage = document.getElementById('countdown');
 const answerInput = document.getElementById('answer');
 const verifyBtn = document.getElementById('verify');
 const feedbackMessage = document.getElementById('feedback');
-const flame = document.getElementById('flame');
+
+// Elementos do foguinho e streak
+const flameElement = document.getElementById('flame'); // ID do elemento 'flame'
 const streakCounter = document.getElementById('streak');
+
+// Elementos do placar de líderes
 const leaderboardList = document.getElementById('leaderboard-list');
-const themeToggleBtn = document.getElementById('theme-toggle');
-const menuToggleBtn = document.getElementById('menu-toggle'); // Botão de menu
-const sideMenu = document.getElementById('side-menu'); // Menu lateral
-const closeMenuBtn = document.getElementById('close-menu-btn'); // Botão de fechar menu
-const menuTrainBtn = document.getElementById('menu-train-btn'); // Botão "Treinamento" no menu
-const menuLeaderboardBtn = document.getElementById('menu-leaderboard-btn'); // Botão "Placar" no menu
-const menuChangeNameBtn = document.getElementById('menu-change-name-btn'); // Botão "Trocar Nome" no menu
-const currentNameDisplay = document.getElementById('current-player-name'); // Para exibir o nome atual
-const newPlayerNameInput = document.getElementById('newPlayerName'); // Input para novo nome
-const saveNewNameBtn = document.getElementById('saveNewNameBtn'); // Botão para salvar novo nome
-const nameChangeFeedback = document.getElementById('name-change-feedback'); // Feedback de troca de nome
 
-// Variáveis do jogo
-let correctSum = 0;
+// Elementos do painel de trocar nome
+const currentPlayersNameSpan = document.getElementById('current-player-name');
+const newPlayerNameInput = document.getElementById('newPlayerName');
+const saveNewNameBtn = document.getElementById('saveNewNameBtn');
+const nameChangeFeedback = document.getElementById('name-change-feedback');
+
+// Botões do menu lateral
+const menuTrainBtn = document.getElementById('menu-train-btn');
+const menuLeaderboardBtn = document.getElementById('menu-leaderboard-btn');
+const menuChangeNameBtn = document.getElementById('menu-change-name-btn');
+
+let currentNumber1, currentNumber2, correctAnswer;
 let streak = 0;
-let currentPlayerName = 'Visitante'; // Valor padrão que será substituído por localStorage
-let isVerifying = false;
 let countdownInterval;
-let currentScore = 0;
-const WEBHOOK_URL = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXOPE3c331zLjzBrXYJzPv589YeLSoz3Hhn0G7ZAuEb7BqLByelvoC3AKvp8IzyP';
+let gameActive = false; // Estado para controlar se o jogo está ativo (gerando números, etc.)
 
-// Sons
-const soundCorrect = typeof Howl !== 'undefined' ? new Howl({ src: ['assets/correct.mp3'], volume: 0.7 }) : null;
-const soundWrong = typeof Howl !== 'undefined' ? new Howl({ src: ['assets/wrong.mp3'], volume: 0.7 }) : null;
+// Sons (usando Howler.js)
+const soundCorrect = new Howl({ src: ['sounds/correct.mp3'] });
+const soundIncorrect = new Howl({ src: ['sounds/incorrect.mp3'] });
+const soundGenerate = new Howl({ src: ['sounds/generate.mp3'] });
+const soundButton = new Howl({ src: ['sounds/button.mp3'] }); // Som para cliques em botões gerais
+const soundThemeToggle = new Howl({ src: ['sounds/theme-toggle.mp3'] }); // Som para alternar tema
 
-// Função para exibir mensagens de feedback
-function showFeedback(element, message, type = 'info', icon = '') {
-    element.textContent = icon + ' ' + message;
-    element.classList.remove('success', 'error', 'info');
-    element.classList.add(type);
-    element.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
-    void element.offsetWidth;
-    element.classList.add('animate__animated', 'animate__bounceIn');
+// --- Funções de Utilitário ---
+
+function playSound(sound) {
+    sound.play();
 }
 
-// Webhook
-async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
-    if (!WEBHOOK_URL) {
-        console.warn('Webhook URL não configurado. O webhook não será enviado.');
-        return;
-    }
-    const payload = {
-        username: 'Renan\'s Math Challenge',
-        avatar_url: 'https://i.imgur.com/2Xy5C6w.png',
-        embeds: [{
-            title: message.title || '',
-            description: message.description,
-            color: color,
-            timestamp: new Date().toISOString(),
-            footer: {
-                text: `Treinamento Prova do Renan - Jogador: ${currentPlayerName}`
-            }
-        }]
-    };
-
-    try {
-        const response = await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            keepalive: true
-        });
-        if (!response.ok) {
-            console.error('Erro ao enviar webhook:', response.status, await response.text());
-        }
-    } catch (error) {
-        console.error('Erro na requisição do webhook:', error);
-    }
+function savePlayerName(name) {
+    localStorage.setItem('playerName', name);
 }
 
-// Lógica do Placar de Líderes
-function getLeaderboard() {
-    try {
-        const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-        return leaderboard.sort((a, b) => b.score - a.score);
-    } catch (e) {
-        console.error("Erro ao ler leaderboard do localStorage:", e);
-        return [];
-    }
+function getPlayerName() {
+    return localStorage.getItem('playerName') || '';
 }
 
-function saveLeaderboard(leaderboard) {
-    try {
-        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-    } catch (e) {
-        console.error("Erro ao salvar leaderboard no localStorage:", e);
-    }
-}
-
-function updateLeaderboard(playerName, score) {
-    if (!playerName || score === undefined) return;
-
-    const leaderboard = getLeaderboard();
-    const existingPlayerIndex = leaderboard.findIndex(entry => entry.name === playerName);
-
-    if (existingPlayerIndex > -1) {
-        if (score > leaderboard[existingPlayerIndex].score) {
-            leaderboard[existingPlayerIndex].score = score;
-        }
+function updateStreak(isCorrect) {
+    if (isCorrect) {
+        streak++;
+        updateFlame(true);
     } else {
-        leaderboard.push({ name: playerName, score: score });
+        streak = 0;
+        updateFlame(false);
     }
-    saveLeaderboard(leaderboard);
-    renderLeaderboard(); // Sempre renderiza após atualização
+    streakCounter.textContent = streak;
 }
 
-function renderLeaderboard() {
-    const leaderboard = getLeaderboard();
-    leaderboardList.innerHTML = '';
-    if (leaderboard.length === 0) {
-        leaderboardList.innerHTML = '<li style="text-align: center;">Nenhuma pontuação registrada ainda.</li>';
+function updateFlame(isCorrect) {
+    flameElement.classList.remove('flame-success', 'flame-error');
+    if (isCorrect) {
+        flameElement.classList.add('flame-success');
+    } else {
+        flameElement.classList.add('flame-error');
+    }
+    // Remove as classes após um curto período para a animação resetar
+    setTimeout(() => {
+        flameElement.classList.remove('flame-success', 'flame-error');
+    }, 800); // Ajuste o tempo conforme a duração da animação no CSS
+}
+
+function showFeedback(message, type) {
+    feedbackMessage.textContent = message;
+    feedbackMessage.className = 'feedback-message animate__animated animate__fadeIn'; // Reset e adiciona animação
+    feedbackMessage.classList.add(type);
+    setTimeout(() => {
+        feedbackMessage.classList.remove('animate__fadeIn');
+    }, 500); // Tempo para a animação fadeOut, correspondente ao animate.css
+}
+
+function clearFeedback() {
+    feedbackMessage.textContent = '';
+    feedbackMessage.className = 'feedback-message'; // Reset classes
+}
+
+function startCountdown(duration) {
+    clearInterval(countdownInterval);
+    countdownMessage.textContent = `Aguarde ${duration} segundos...`;
+    let timeLeft = duration;
+
+    countdownInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+            countdownMessage.textContent = `Aguarde ${timeLeft} segundos...`;
+        } else {
+            clearInterval(countdownInterval);
+            countdownMessage.textContent = ''; // Limpa a mensagem do countdown
+            generateNumbers(); // Gera novos números automaticamente após o countdown
+        }
+    }, 1000);
+}
+
+// --- Funções de Geração e Verificação de Números ---
+
+function generateNumbers() {
+    if (gameActive) {
+        playSound(soundGenerate);
+        clearFeedback();
+        answerInput.value = '';
+        answerInput.focus();
+
+        // Gera números com base na streak para aumentar a dificuldade
+        const maxNum = 10 + Math.floor(streak / 5) * 5; // Aumenta o max a cada 5 acertos
+        currentNumber1 = Math.floor(Math.random() * maxNum) - Math.floor(maxNum / 2); // Números negativos e positivos
+        currentNumber2 = Math.floor(Math.random() * maxNum) - Math.floor(maxNum / 2);
+
+        // Garante que não haja divisão por zero ou resultados estranhos para iniciantes
+        if (currentNumber2 === 0) {
+            currentNumber2 = (Math.random() > 0.5 ? 1 : -1); // Garante que não seja zero
+        }
+        if (Math.abs(currentNumber1) < 2 && Math.abs(currentNumber2) < 2) {
+            currentNumber1 = Math.floor(Math.random() * 10) - 5;
+            currentNumber2 = Math.floor(Math.random() * 10) - 5;
+        }
+
+        // Escolhe aleatoriamente entre adição, subtração, multiplicação, ou divisão
+        const operations = ['+', '-', '*', '/'];
+        const operation = operations[Math.floor(Math.random() * operations.length)];
+
+        let displayNum1 = currentNumber1;
+        let displayNum2 = currentNumber2;
+
+        switch (operation) {
+            case '+':
+                correctAnswer = currentNumber1 + currentNumber2;
+                break;
+            case '-':
+                correctAnswer = currentNumber1 - currentNumber2;
+                break;
+            case '*':
+                correctAnswer = currentNumber1 * currentNumber2;
+                break;
+            case '/':
+                // Garante que a divisão seja exata e o divisor não seja zero
+                if (currentNumber2 === 0 || currentNumber1 % currentNumber2 !== 0) {
+                    // Se não for exata, tenta encontrar um divisor para currentNumber1
+                    let divisors = [];
+                    for (let i = 1; i <= Math.abs(currentNumber1); i++) {
+                        if (currentNumber1 % i === 0) {
+                            divisors.push(i);
+                            if (i !== 0) divisors.push(-i);
+                        }
+                    }
+                    if (divisors.length > 0) {
+                        currentNumber2 = divisors[Math.floor(Math.random() * divisors.length)];
+                        if (currentNumber2 === 0) currentNumber2 = 1; // Previne divisão por zero
+                    } else {
+                        // Último recurso: volta para adição se não conseguir uma divisão limpa
+                        operation = '+';
+                        correctAnswer = currentNumber1 + currentNumber2;
+                    }
+                }
+                correctAnswer = currentNumber1 / currentNumber2;
+                break;
+        }
+
+        // Atualiza a exibição dos números com a operação
+        num1Display.textContent = `Primeiro número: ${displayNum1}`;
+        num2Display.textContent = `Segundo número: ${operation} ${displayNum2}`;
+
+        // Animação dos números
+        num1Display.classList.remove('animate__fadeInDown');
+        num2Display.classList.remove('animate__fadeInDown');
+        void num1Display.offsetWidth; // Trigger reflow
+        void num2Display.offsetWidth; // Trigger reflow
+        num1Display.classList.add('animate__fadeInDown');
+        num2Display.classList.add('animate__fadeInDown');
+    }
+}
+
+function verifyAnswer() {
+    if (!gameActive) return; // Não verifica se o jogo não está ativo
+
+    playSound(soundButton); // Som de clique ao verificar
+    const playerAnswer = parseFloat(answerInput.value);
+
+    if (isNaN(playerAnswer)) {
+        showFeedback('Por favor, digite um número!', 'info');
         return;
     }
-    leaderboard.forEach((entry, index) => {
-        const listItem = document.createElement('li');
-        listItem.innerHTML = `<span>${index + 1}. ${entry.name}</span> <span>${entry.score} acertos</span>`;
 
-        // Adiciona classes para cores personalizadas
-        if (index === 0) {
-            listItem.classList.add('rank-1');
-        } else if (index === 1) {
-            listItem.classList.add('rank-2');
-        } else if (index === 2) {
-            listItem.classList.add('rank-3');
-        } else {
-            // Do 4º lugar em diante, fundo branco com letras verdes
-            listItem.classList.add('rank-default');
-        }
+    if (playerAnswer === correctAnswer) {
+        showFeedback('Correto! 🎉', 'success');
+        playSound(soundCorrect);
+        updateStreak(true);
+    } else {
+        showFeedback(`Errado. O correto era ${correctAnswer}. 😔`, 'error');
+        playSound(soundIncorrect);
+        updateStreak(false);
+    }
 
-        // Destaca o jogador atual se ele estiver abaixo do 10º lugar
-        if (currentPlayerName && entry.name === currentPlayerName && index >= 10) {
-            listItem.classList.add('highlight-player');
-        }
-
-        leaderboardList.appendChild(listItem);
-    });
+    // Inicia o countdown antes de gerar novos números
+    startCountdown(2);
 }
 
-// Funções de navegação entre painéis
+// --- Funções de Navegação e Painéis ---
+
 function showPanel(panelToShow) {
     const panels = [welcomePanel, gamePanel, leaderboardPanel, changeNamePanel];
     panels.forEach(panel => {
         if (panel === panelToShow) {
             panel.classList.remove('is-hidden');
-            panel.style.transform = 'translateY(0)'; // Garante que a animação ocorra
-            panel.style.position = 'relative'; // Ocupa espaço
+            panel.classList.add('animate__fadeIn');
         } else {
             panel.classList.add('is-hidden');
-            panel.style.transform = 'translateY(10px)'; // Esconde com deslocamento
-            panel.style.position = 'absolute'; // Não ocupa espaço
+            panel.classList.remove('animate__fadeIn');
         }
     });
-    sideMenu.classList.remove('is-open'); // Fecha o menu lateral ao navegar
 }
 
-function showWelcome() {
-    showPanel(welcomePanel);
-    playerNameInput.focus();
-}
-
-function showGame() {
-    if (currentPlayerName === 'Visitante' && !localStorage.getItem('playerName')) {
-        showFeedback(feedbackMessage, 'Por favor, digite seu nome primeiro!', 'error', '⚠️');
-        showPanel(welcomePanel); // Volta para a tela de boas-vindas se o nome não estiver salvo
-        return;
+function loadGame() {
+    const playerName = getPlayerName();
+    if (playerName) {
+        welcomePanel.classList.add('is-hidden');
+        gamePanel.classList.remove('is-hidden');
+        gameActive = true; // Ativa o jogo
+        generateNumbers(); // Gera os primeiros números
+    } else {
+        showPanel(welcomePanel); // Mostra o painel de boas-vindas para o nome
+        gameActive = false; // Garante que o jogo não está ativo sem nome
     }
-    showPanel(gamePanel);
-    generateNumbers();
+    streakCounter.textContent = streak; // Garante que a streak inicial é exibida
 }
 
 function showLeaderboard() {
     showPanel(leaderboardPanel);
-    renderLeaderboard(); // Garante que o placar seja renderizado ao abrir
+    updateLeaderboardDisplay();
+    // Fechar menu lateral ao navegar
+    sideMenu.classList.remove('is-open');
 }
 
-function showChangeName() {
-    showPanel(changeNamePanel);
-    currentNameDisplay.textContent = currentPlayerName;
-    newPlayerNameInput.value = ''; // Limpa o input
-    nameChangeFeedback.textContent = ''; // Limpa feedback
-    newPlayerNameInput.focus();
-}
+function updateLeaderboardDisplay() {
+    const scores = JSON.parse(localStorage.getItem('leaderboardScores') || '[]');
+    // Ordena do maior para o menor acertos
+    scores.sort((a, b) => b.streak - a.streak);
 
-// Gerar números
-function generateNumbers() {
-    clearInterval(countdownInterval);
-    countdownDisplay.textContent = '';
-    num1Display.textContent = '';
-    num2Display.textContent = '';
-    answerInput.value = '';
+    leaderboardList.innerHTML = ''; // Limpa a lista existente
 
-    answerInput.disabled = true;
-    verifyBtn.disabled = true;
-    generateBtn.disabled = true;
+    const currentPlayerName = getPlayerName(); // Nome do jogador atual
 
-    feedbackMessage.textContent = '';
-    feedbackMessage.className = 'feedback-message';
+    scores.forEach((entry, index) => {
+        const li = document.createElement('li');
+        let rankClass = '';
+        if (index === 0) rankClass = 'rank-1';
+        else if (index === 1) rankClass = 'rank-2';
+        else if (index === 2) rankClass = 'rank-3';
 
-    const num1 = Math.floor(Math.random() * 2001) - 1000;
-    const num2 = Math.floor(Math.random() * 2001) - 1000;
-    correctSum = num1 + num2;
-
-    num1Display.textContent = `Primeiro número: ${num1}`;
-    num1Display.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
-    void num1Display.offsetWidth;
-    num1Display.classList.add('animate__animated', 'animate__bounceIn');
-
-    numbersDisplayContainer.classList.remove('is-hidden');
-
-    let seconds = 5;
-    countdownDisplay.textContent = `Segundo número em ${seconds} segundos...`;
-
-    countdownInterval = setInterval(() => {
-        seconds--;
-        countdownDisplay.textContent = `Segundo número em ${seconds} segundos...`;
-        if (seconds <= 0) {
-            clearInterval(countdownInterval);
-            countdownDisplay.textContent = '';
-            num2Display.textContent = `Segundo número: ${num2}`;
-            num2Display.classList.remove('animate__animated', 'animate__headShake', 'animate__bounceIn');
-            void num2Display.offsetWidth;
-            num2Display.classList.add('animate__animated', 'animate__bounceIn');
-
-            answerInput.disabled = false;
-            verifyBtn.disabled = false;
-            generateBtn.disabled = false;
-            answerInput.focus();
+        li.classList.add(rankClass);
+        if (entry.name === currentPlayerName) {
+            li.classList.add('highlight-player');
         }
-    }, 1000);
+
+        li.innerHTML = `
+            <span>${index + 1}. ${entry.name}</span>
+            <span>${entry.streak} acertos</span>
+        `;
+        leaderboardList.appendChild(li);
+    });
 }
 
-function verifyAnswer() {
-    if (isVerifying) return;
-    isVerifying = true;
-
-    answerInput.disabled = true;
-    verifyBtn.disabled = true;
-
-    const userAnswerString = answerInput.value.trim();
-
-    if (num2Display.textContent === '') {
-        showFeedback(feedbackMessage, 'Aguarde o segundo número aparecer!', 'info', '⏳');
-        isVerifying = false;
-        answerInput.disabled = false;
-        verifyBtn.disabled = false;
-        return;
-    }
-
-    const isNumeric = /^-?\d+$/.test(userAnswerString);
-    let userAnswer;
-
-    if (!isNumeric) {
-        showFeedback(feedbackMessage, 'Por favor, digite um número válido.', 'error', '❌');
-        if (soundWrong) soundWrong.play();
-        flame.classList.add('flame-error');
-        streak = 0;
-        streakCounter.textContent = streak;
-        updateLeaderboard(currentPlayerName, currentScore); // Salva a pontuação atual
-        currentScore = 0; // Reseta pontuação para nova rodada
-        setTimeout(() => flame.classList.remove('flame-error'), 500);
-        setTimeout(() => {
-            isVerifying = false;
-            generateNumbers();
-        }, 1500);
-        return;
-    } else {
-        userAnswer = parseInt(userAnswerString);
-    }
-
-    let messageTitle = '';
-    let messageDescription = '';
-    let messageColor = 0x6A05AD;
-
-    if (userAnswer === correctSum) {
-        streak++;
-        currentScore++;
-        streakCounter.textContent = streak;
-        showFeedback(feedbackMessage, 'Correto! 🎉', 'success', '✅');
-        flame.classList.add('flame-success');
-        if (soundCorrect) soundCorrect.play();
-
-        messageTitle = 'Resposta Correta!';
-        const num1 = parseInt(num1Display.textContent.replace('Primeiro número: ', ''));
-        const num2 = parseInt(num2Display.textContent.replace('Segundo número: ', ''));
-        messageDescription = `O(a) jogador(a) **${currentPlayerName}** acertou a soma! (${num1} + ${num2} = ${correctSum})\nAcertos Consecutivos: **${streak}**\nPontuação atual: **${currentScore}**`;
-        messageColor = 0x4CAF50;
-    } else {
-        streak = 0;
-        streakCounter.textContent = streak;
-        showFeedback(feedbackMessage, `Errado! A soma correta era ${correctSum}.`, 'error', '❌');
-        flame.classList.add('flame-error');
-        if (soundWrong) soundWrong.play();
-
-        messageTitle = 'Resposta Incorreta!';
-        const num1 = parseInt(num1Display.textContent.replace('Primeiro número: ', ''));
-        const num2 = parseInt(num2Display.textContent.replace('Segundo número: ', ''));
-        messageDescription = `O(a) jogador(a) **${currentPlayerName}** errou a soma. A resposta para ${num1} + ${num2} era ${correctSum}, mas digitou ${userAnswer}.\nAcertos Consecutivos: **${streak}**\nPontuação final da rodada: **${currentScore}**`;
-        messageColor = 0xF44336;
-
-        updateLeaderboard(currentPlayerName, currentScore);
-        currentScore = 0;
-    }
-
-    sendDiscordWebhook('Renan\'s Bot', {
-        title: messageTitle,
-        description: messageDescription,
-    }, messageColor);
-
-    setTimeout(() => flame.classList.remove('flame-success', 'flame-error'), 500);
-    setTimeout(() => {
-        isVerifying = false;
-        generateNumbers();
-    }, 1500);
-}
-
-// Lógica de alternância de tema
-function toggleTheme() {
-    const body = document.body;
-    if (body.classList.contains('light-theme')) {
-        body.classList.remove('light-theme');
-        body.classList.add('dark-theme');
-        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
-        localStorage.setItem('theme', 'dark');
-    } else {
-        body.classList.remove('dark-theme');
-        body.classList.add('light-theme');
-        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
-        localStorage.setItem('theme', 'light');
+function saveScore(playerName, finalStreak) {
+    if (finalStreak > 0) { // Salva apenas se o jogador teve acertos
+        const scores = JSON.parse(localStorage.getItem('leaderboardScores') || '[]');
+        scores.push({ name: playerName, streak: finalStreak, date: new Date().toISOString() });
+        localStorage.setItem('leaderboardScores', JSON.stringify(scores));
     }
 }
 
-// Event Listeners
-startGameBtn.addEventListener('click', () => {
-    const name = playerNameInput.value.trim();
-    if (name) {
-        currentPlayerName = name;
-        localStorage.setItem('playerName', name); // Salva o nome
-        showGame();
-        sendDiscordWebhook('Renan\'s Bot', {
-            title: 'Novo Jogador Iniciou o Treinamento!',
-            description: `O(a) jogador(a) **${currentPlayerName}** acabou de iniciar o treinamento.`
-        }, 0x00BCD4);
-    } else {
-        showFeedback(feedbackMessage, 'Por favor, digite seu nome para começar!', 'error', '⚠️');
-        playerNameInput.focus();
-    }
+function showChangeNamePanel() {
+    showPanel(changeNamePanel);
+    currentPlayersNameSpan.textContent = getPlayerName();
+    newPlayerNameInput.value = ''; // Limpa o input
+    nameChangeFeedback.textContent = ''; // Limpa o feedback
+    // Fechar menu lateral ao navegar
+    sideMenu.classList.remove('is-open');
+}
+
+// --- Event Listeners ---
+
+// Listener para o botão de alternar tema
+themeToggleBtn.addEventListener('click', () => {
+    playSound(soundThemeToggle);
+    body.classList.toggle('dark-theme');
+    const isDark = body.classList.contains('dark-theme');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeToggleBtn.querySelector('i').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
 });
 
-viewLeaderboardBtn.addEventListener('click', showLeaderboard);
-generateBtn.addEventListener('click', generateNumbers);
-verifyBtn.addEventListener('click', verifyAnswer);
-answerInput.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter' && !isVerifying) verifyAnswer();
-});
-playerNameInput.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter') startGameBtn.click();
-});
-
-// Eventos do menu lateral
+// Listener para o botão de abrir/fechar o menu lateral
 menuToggleBtn.addEventListener('click', () => {
-    sideMenu.classList.add('is-open');
+    playSound(soundButton);
+    sideMenu.classList.toggle('is-open');
 });
 
-closeMenuBtn.addEventListener('click', () => {
+// Listener para fechar o menu ao clicar fora dele
+document.addEventListener('click', (event) => {
+    // Se o clique não foi no botão de toggle e o menu está aberto e o clique foi fora do menu
+    if (!menuToggleBtn.contains(event.target) && sideMenu.classList.contains('is-open') && !sideMenu.contains(event.target)) {
+        sideMenu.classList.remove('is-open');
+    }
+});
+
+// Listeners para os botões do menu lateral
+menuTrainBtn.addEventListener('click', () => {
+    playSound(soundButton);
+    // Reinicia o jogo e o streak ao voltar para o treinamento
+    saveScore(getPlayerName(), streak); // Salva o score antes de resetar
+    streak = 0;
+    streakCounter.textContent = streak;
+    clearInterval(countdownInterval); // Para qualquer countdown ativo
+    gameActive = true; // Ativa o jogo
+    showPanel(gamePanel);
+    generateNumbers();
     sideMenu.classList.remove('is-open');
 });
 
-menuTrainBtn.addEventListener('click', showGame);
-menuLeaderboardBtn.addEventListener('click', showLeaderboard);
-menuChangeNameBtn.addEventListener('click', showChangeName);
+menuLeaderboardBtn.addEventListener('click', () => {
+    playSound(soundButton);
+    // Salva o score atual antes de ver o placar (se o jogo estiver ativo)
+    if (gameActive) {
+        saveScore(getPlayerName(), streak);
+        streak = 0; // Reseta streak após salvar e sair do jogo
+        streakCounter.textContent = streak;
+        clearInterval(countdownInterval);
+        gameActive = false; // Desativa o jogo ao ir para o placar
+    }
+    showLeaderboard();
+});
 
-saveNewNameBtn.addEventListener('click', () => {
-    const newName = newPlayerNameInput.value.trim();
-    if (newName && newName !== currentPlayerName) {
-        // Antes de mudar o nome, transfere a pontuação antiga para o novo nome (se houver)
-        const oldLeaderboard = getLeaderboard();
-        const oldEntry = oldLeaderboard.find(entry => entry.name === currentPlayerName);
+menuChangeNameBtn.addEventListener('click', () => {
+    playSound(soundButton);
+    // Salva o score atual antes de mudar o nome (se o jogo estiver ativo)
+    if (gameActive) {
+        saveScore(getPlayerName(), streak);
+        streak = 0; // Reseta streak após salvar e sair do jogo
+        streakCounter.textContent = streak;
+        clearInterval(countdownInterval);
+        gameActive = false; // Desativa o jogo
+    }
+    showChangeNamePanel();
+});
 
-        if (oldEntry) {
-            updateLeaderboard(newName, oldEntry.score); // Adiciona a pontuação do nome antigo ao novo nome
-            // Remove a entrada antiga do placar
-            const updatedLeaderboard = oldLeaderboard.filter(entry => entry.name !== currentPlayerName);
-            saveLeaderboard(updatedLeaderboard);
-        }
 
-        currentPlayerName = newName;
-        localStorage.setItem('playerName', newName); // Salva o novo nome
-        currentNameDisplay.textContent = newName;
-        showFeedback(nameChangeFeedback, 'Nome atualizado com sucesso!', 'success', '✔️');
-
-        sendDiscordWebhook('Renan\'s Bot', {
-            title: 'Nome do Jogador Alterado!',
-            description: `O(a) jogador(a) **${oldEntry ? oldEntry.name : 'Desconhecido'}** agora é conhecido como **${currentPlayerName}**.`
-        }, 0x00BCD4);
-
-    } else if (newName === currentPlayerName) {
-        showFeedback(nameChangeFeedback, 'Este já é o seu nome!', 'info', 'ℹ️');
+// Listener do painel de boas-vindas
+startGameBtn.addEventListener('click', () => {
+    playSound(soundButton);
+    const name = playerNameInput.value.trim();
+    if (name) {
+        savePlayerName(name);
+        loadGame();
     } else {
-        showFeedback(nameChangeFeedback, 'Por favor, digite um nome válido.', 'error', '❌');
+        showFeedback('Por favor, digite seu nome para começar!', 'error');
     }
 });
 
-newPlayerNameInput.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter') saveNewNameBtn.click();
+viewLeaderboardBtnWelcome.addEventListener('click', () => {
+    playSound(soundButton);
+    showLeaderboard();
 });
 
+// Listener do painel de jogo
+generateBtn.addEventListener('click', generateNumbers); // Botão "Gerar Números"
+verifyBtn.addEventListener('click', verifyAnswer); // Botão "Verificar"
 
-// Lógica de `beforeunload` para salvar pontuação final
-window.addEventListener('beforeunload', (event) => {
-    if (currentPlayerName !== 'Visitante' && currentScore > 0) {
-        updateLeaderboard(currentPlayerName, currentScore);
-        sendDiscordWebhook('Renan\'s Bot', {
-            title: 'Sessão de Treinamento Encerrada!',
-            description: `O(a) jogador(a) **${currentPlayerName}** encerrou o treinamento com **${currentScore}** acertos totais.`
-        }, 0x6A05AD);
+// Permite verificar a resposta com "Enter"
+answerInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // Evita o comportamento padrão do Enter (ex: submeter form)
+        verifyAnswer();
     }
 });
 
-// Inicialização ao carregar a página
+// Listener do painel de trocar nome
+saveNewNameBtn.addEventListener('click', () => {
+    playSound(soundButton);
+    const newName = newPlayerNameInput.value.trim();
+    if (newName && newName !== getPlayerName()) {
+        savePlayerName(newName);
+        nameChangeFeedback.textContent = 'Nome salvo com sucesso!';
+        nameChangeFeedback.classList.remove('error');
+        nameChangeFeedback.classList.add('success');
+        currentPlayersNameSpan.textContent = newName; // Atualiza a exibição do nome atual
+        setTimeout(() => {
+            nameChangeFeedback.textContent = '';
+            nameChangeFeedback.classList.remove('success');
+        }, 3000);
+    } else if (newName === getPlayerName()) {
+        nameChangeFeedback.textContent = 'Este já é o seu nome!';
+        nameChangeFeedback.classList.remove('success');
+        nameChangeFeedback.classList.add('error');
+    } else {
+        nameChangeFeedback.textContent = 'Por favor, digite um nome válido.';
+        nameChangeFeedback.classList.remove('success');
+        nameChangeFeedback.classList.add('error');
+    }
+});
+
+// --- Inicialização ---
+
 document.addEventListener('DOMContentLoaded', () => {
     // Carrega o tema salvo
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+        body.classList.add('dark-theme');
+        themeToggleBtn.querySelector('i').className = 'fas fa-sun';
     } else {
-        document.body.classList.add('light-theme');
-        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+        body.classList.remove('dark-theme');
+        themeToggleBtn.querySelector('i').className = 'fas fa-moon';
     }
 
-    // Carrega o nome do jogador salvo
-    const savedPlayerName = localStorage.getItem('playerName');
-    if (savedPlayerName) {
-        currentPlayerName = savedPlayerName;
-        playerNameInput.value = savedPlayerName;
-        showGame(); // Inicia direto no jogo se o nome já estiver salvo
-    } else {
-        showWelcome(); // Exibe a tela de boas-vindas para pedir o nome
-    }
+    // Carrega o jogo ou o painel de boas-vindas
+    loadGame();
+
+    // Inicializa o contador de streak no display
+    streakCounter.textContent = streak;
 });
