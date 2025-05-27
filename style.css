@@ -1,77 +1,82 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #e6f5e3;
-    color: #2e4d2c;
+    font-family: Arial, sans-serif;
+    background-color: #eafbe7;
+    color: #1a3d1a;
     margin: 0;
     padding: 0;
 }
 
 header {
-    background-color: #4CAF50;
+    background-color: #3b7f3b;
     color: white;
-    padding: 1em;
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .theme-toggle {
-    background: transparent;
-    border: none;
-    font-size: 1.5rem;
     cursor: pointer;
-    color: white;
+    font-size: 1.5rem;
 }
 
 main {
-    padding: 2em;
-    max-width: 600px;
-    margin: auto;
+    padding: 2rem;
 }
 
-.nome-container, .numero-container, .resposta-container, #ranking-container {
-    margin-bottom: 2em;
+.question-box, .response-buttons, .ranking, .player-info {
+    margin-bottom: 2rem;
+    background-color: #d4f5d0;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 128, 0, 0.2);
 }
 
 button {
+    padding: 0.5rem 1rem;
     background-color: #4CAF50;
-    border: none;
     color: white;
-    padding: 0.75em 1.5em;
-    margin: 0.5em;
+    border: none;
+    border-radius: 5px;
+    margin: 0.5rem;
     cursor: pointer;
-    border-radius: 25px;
-    transition: background-color 0.3s ease;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
-input[type="text"] {
-    padding: 0.5em;
-    width: 70%;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+ul {
+    list-style: none;
+    padding: 0;
 }
 
-.dark-theme {
-    background-color: #1e1e1e;
-    color: #dcdcdc;
+li {
+    padding: 0.5rem 0;
 }
 
-.dark-theme header {
+/* Dark theme */
+body.dark {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+}
+
+body.dark header {
     background-color: #333;
 }
 
-.dark-theme .theme-toggle {
-    color: #ffd700;
+body.dark .question-box,
+body.dark .response-buttons,
+body.dark .ranking,
+body.dark .player-info {
+    background-color: #2a2a2a;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
-.dark-theme button {
-    background-color: #2f8f2f;
+body.dark button {
+    background-color: #556b2f;
 }
 
-.dark-theme button:hover {
-    background-color: #267326;
+body.dark button:hover {
+    background-color: #6b8e23;
 }
