@@ -111,44 +111,21 @@ function generateNumbers() {
     }, 5000); // 5000 milissegundos = 5 segundos
 }
 
-async function saveToRanking(name, score) {
-  // Tenta buscar o registro existente
-  const { data: existing, error: fetchError } = await supabase
-    .from('ranking')
-    .select('score')
-    .eq('name', name)
-    .single();
-
-  if (!existing) {
-    // Não existe, insere novo
-    await supabase.from('ranking').insert([{ name, score }]);
-  } else if (score > existing.score) {
-    // Existe e score é maior, atualiza
-    await supabase.from('ranking').update({ score }).eq('name', name);
-  }
+function saveToRanking(name, score) {
+    let ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+    const idx = ranking.findIndex(item => item.name === name);
+    if (idx !== -1) {
+        // Se a nova pontuação for maior, atualiza
+        if (score > ranking[idx].score) {
+            ranking[idx].score = score;
+        }
+    } else {
+        ranking.push({ name, score });
+    }
+    ranking.sort((a, b) => b.score - a.score);
+    ranking = ranking.slice(0, 10); // Top 10
+    localStorage.setItem('ranking', JSON.stringify(ranking));
 }
-
-// Buscar ranking ordenado
-async function fetchRanking() {
-  const { data, error } = await supabase
-    .from('ranking')
-    .select('*')
-    .order('score', { ascending: false })
-    .limit(10);
-  return data || [];
-}
-
-// Atualizar ranking na tela
-async function updateRankingDisplay() {
-  const ranking = await fetchRanking();
-  const rankingList = document.getElementById('ranking-list');
-  rankingList.innerHTML = ranking.map((item, i) =>
-    `<li><strong>${i + 1}º</strong> ${item.name} — <b>${item.score}</b> pts</li>`
-  ).join('') || '<li>Nenhum registro ainda.</li>';
-}
-
-// Atualizar ranking periodicamente (exemplo: a cada 5 segundos)
-setInterval(updateRankingDisplay, 5000);
 
 // Função para mostrar o ranking
 function showRanking() {
@@ -347,6 +324,18 @@ playerNameInput.addEventListener('keypress', (event) => {
         startGameBtn.click(); // Simula o clique no botão de iniciar
     }
 });
+
+function updateRankingDisplay() {
+    const rankingList = document.getElementById('ranking-list');
+    const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+    rankingList.innerHTML = ranking.map((item, i) =>
+        `<li><strong>${i + 1}º</strong> ${item.name} — <b>${item.score}</b> pts</li>`
+    ).join('') || '<li>Nenhum registro ainda.</li>';
+}
+
+// Quando salvar a pontuação:
+saveToRanking(currentPlayerName, streak);
+updateRankingDisplay && updateRankingDisplay();
 
 // --- Lógica para "finalizar" o jogo e enviar a pontuação (Este webhook ainda permanece) ---
 window.addEventListener('beforeunload', () => {
