@@ -420,6 +420,7 @@ style="position: fixed; top: 0px; right: 0px; left: 0px; pointer-events: none; w
   filter: drop-shadow(0 0 10px rgba(255,165,0,0.8));
   transition: all 0.3s ease;
 }
+
 .flame-inner {
   position: absolute;
   width: 100%;

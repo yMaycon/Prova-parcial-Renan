@@ -192,6 +192,11 @@ function verifyAnswer() {
     // Desabilita input e botão para evitar múltiplas verificações
     answerInput.disabled = true;
     verifyBtn.disabled = true;
+    
+    let Resolvido = answerInput.value.trim();
+    if (Resolvido.charAt(0) === '.') {
+        answerInput.value = `-${Resolvido.substring(1)}`;
+    }
 
     const userAnswer = parseInt(answerInput.value);
     const num1 = parseInt(num1Display.textContent.replace('Primeiro número: ', ''));
@@ -207,6 +212,7 @@ function verifyAnswer() {
         verifyBtn.disabled = false; // Reabilita para que o usuário possa tentar novamente
         return;
     }
+
 
     if (isNaN(userAnswer)) {
         feedbackMessage.textContent = 'Por favor, digite um número.';
