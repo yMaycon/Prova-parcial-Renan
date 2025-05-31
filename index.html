@@ -32,13 +32,28 @@
       </div>
     </div>
 
+    <div id="ranking-panel" class="game-panel hidden">
+      <div class="card-header">
+        <h1>Ranking</h1>
+      </div>
+      <div class="game-container">
+        <ol id="ranking-list"></ol>
+        <button id="backToWelcome" class="btn btn-generate">Voltar</button>
+      </div>
+    </div>
+
     <div id="game-panel" class="game-panel hidden">
       <div class="card-header">
         <h1>Prepara Renan (3A)</h1>
       </div>
+    
+      <button id="showRankingBtn" class="btn btn-verify" style="margin-top: -10px;">
+        <span class="btn-icon">🏆</span>
+        Ver Ranking
+      </button>
 
       <div class="game-container">
-        <button id="generate" class="btn btn-generate">
+        <button id="generate" class="btn btn-generate", style="margin-top: 10px;">
           <span class="btn-icon">🎲</span>
           Gerar Números
         </button>
@@ -63,7 +78,7 @@
           <div class="flame-container">
             <div id="flame" class="flame"></div>
           </div>
-          <div class="streak-counter">Sequência: <span id="streak">0</span></div>
+          <div class="streak-counter"><span id="streak">0</span></div>
         </div>
       </div>
     </div>

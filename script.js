@@ -111,6 +111,77 @@ function generateNumbers() {
     }, 5000); // 5000 milissegundos = 5 segundos
 }
 
+function saveToRanking(name, score) {
+    let ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+    const idx = ranking.findIndex(item => item.name === name);
+    if (idx !== -1) {
+        // Se a nova pontuação for maior, atualiza
+        if (score > ranking[idx].score) {
+            ranking[idx].score = score;
+        }
+    } else {
+        ranking.push({ name, score });
+    }
+    ranking.sort((a, b) => b.score - a.score);
+    ranking = ranking.slice(0, 10); // Top 10
+    localStorage.setItem('ranking', JSON.stringify(ranking));
+}
+
+// Função para mostrar o ranking
+function showRanking() {
+    const rankingPanel = document.getElementById('ranking-panel');
+    const rankingList = document.getElementById('ranking-list');
+    const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+    rankingList.innerHTML = ranking.map((item, i) =>
+        `<li><strong>${i + 1}º</strong> ${item.name} — <b>${item.score}</b> pts</li>`
+    ).join('') || '<li>Nenhum registro ainda.</li>';
+    document.getElementById('welcome-panel').classList.add('hidden');
+    rankingPanel.classList.remove('hidden');
+}
+
+// Gera ou recupera um identificador único para o aparelho
+function getDeviceId() {
+    let id = localStorage.getItem('deviceId');
+    if (!id) {
+      id = 'dev-' + Math.random().toString(36).substr(2, 16);
+      localStorage.setItem('deviceId', id);
+    }
+    return id;
+  }
+  
+  // Salva o nome do jogador para o identificador
+  function savePlayerName(name) {
+    const id = getDeviceId();
+    localStorage.setItem('playerName_' + id, name);
+  }
+  
+  // Recupera o nome do jogador para o identificador
+  function getSavedPlayerName() {
+    const id = getDeviceId();
+    return localStorage.getItem('playerName_' + id);
+  }
+  
+  // Ao carregar a página, verifica se já tem nome salvo
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedName = getSavedPlayerName();
+    if (savedName) {
+      // Pula o painel de boas-vindas e inicia o jogo direto
+      document.getElementById('playerName').value = savedName;
+      document.getElementById('welcome-panel').classList.add('hidden');
+      document.getElementById('game-panel').classList.remove('hidden');
+      // Defina a variável global do nome do jogador, se necessário
+      window.currentPlayerName = savedName;
+    }
+  });
+  
+  // Quando o jogador clicar em "Começar Questões"
+  document.getElementById('startGameBtn').addEventListener('click', () => {
+    const name = document.getElementById('playerName').value.trim();
+    if (name) {
+      savePlayerName(name);
+    }
+  });
+
 function verifyAnswer() {
     // Se já estiver verificando, sai da função
     if (isVerifying) {
@@ -160,6 +231,10 @@ function verifyAnswer() {
         feedbackMessage.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
         flame.classList.add('flame-success'); // Adiciona classe para animação
         if (soundCorrect) soundCorrect.play();
+
+        // Quando salvar a pontuação:
+        saveToRanking(currentPlayerName, streak);
+        updateRankingDisplay && updateRankingDisplay();
 
         messageTitle = 'Resposta Correta!';
         messageDescription = `O(a) jogador(a) **${currentPlayerName}** acertou a soma! (${num1} + ${num2} = ${correctSum})\nAcertos Consecutivos: **${streak}**`;
@@ -242,11 +317,24 @@ playerNameInput.addEventListener('keypress', (event) => {
     }
 });
 
+function updateRankingDisplay() {
+    const rankingList = document.getElementById('ranking-list');
+    const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+    rankingList.innerHTML = ranking.map((item, i) =>
+        `<li><strong>${i + 1}º</strong> ${item.name} — <b>${item.score}</b> pts</li>`
+    ).join('') || '<li>Nenhum registro ainda.</li>';
+}
+
+// Quando salvar a pontuação:
+saveToRanking(currentPlayerName, streak);
+updateRankingDisplay && updateRankingDisplay();
+
 // --- Lógica para "finalizar" o jogo e enviar a pontuação (Este webhook ainda permanece) ---
 window.addEventListener('beforeunload', () => {
     // Verificar se o nome do jogador foi definido (ou seja, o jogo foi iniciado)
     // E se houve pelo menos 1 acerto.
     if (currentPlayerName !== 'Visitante' && streak > 0) {
+        saveToRanking(currentPlayerName, streak);
         sendDiscordWebhook(
             'Renan\'s Bot',
             {
@@ -256,6 +344,23 @@ window.addEventListener('beforeunload', () => {
             0x6A05AD // Roxo para encerramento
         );
     }
+});
+
+let lastPanel = null;
+
+function showRanking() {
+    // Descubra qual painel está visível antes de abrir o ranking
+    lastPanel = document.querySelector('.game-panel:not(.hidden)');
+    document.getElementById('ranking-panel').classList.remove('hidden');
+    if (lastPanel) lastPanel.classList.add('hidden');
+    updateRankingDisplay();
+}
+
+document.getElementById('showRankingBtn').addEventListener('click', showRanking);
+
+document.getElementById('backToWelcome').addEventListener('click', () => {
+    document.getElementById('ranking-panel').classList.add('hidden');
+    if (lastPanel) lastPanel.classList.remove('hidden');
 });
 
 // Iniciar o painel de boas-vindas na carga da página
