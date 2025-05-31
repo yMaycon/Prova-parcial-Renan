@@ -84,6 +84,14 @@
     </div>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    // Substitua pelos dados do seu projeto Supabase:
+    const supabaseUrl = 'Roberto3213aa!@db.shdhdcexfccmsxuuzvms.supabase.co:5432/postgres';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoZGhkY2V4ZmNjbXN4dXV6dm1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NTg3NDMsImV4cCI6MjA2NDIzNDc0M30.KCbhhIozxsfPMCuOr5SQ0LGZRWfIWCB-5UmomWTyg94';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+  </script>
+
   <noscript>Este site requer JavaScript para funcionar corretamente.</noscript>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   <script src="script.js" defer></script>
