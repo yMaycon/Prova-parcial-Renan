@@ -279,7 +279,7 @@ function verifyAnswer() {
 
     // Gera novos números automaticamente após verificar a resposta
     // A reabilitação dos campos é feita dentro de generateNumbers
-    setTimeout(generateNumbers, 1500); // 1.5 segundos para o usuário ver o feedback
+    setTimeout(generateNumbers, 3000); // 1.5 segundos para o usuário ver o feedback
 }
 
 // --- Event Listeners ---
