@@ -16,7 +16,7 @@ const streakCounter = document.getElementById('streak');
 // Variáveis do jogo
 let correctSum = 0;
 let streak = 0;
-let currentPlayerName = 'Visitante'; // Nome padrão
+let currentPlayerName = null;
 let isVerifying = false; // NOVA VARIÁVEL DE ESTADO: impede múltiplas verificações
 const webhookUrl = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXOPE3c331zLjzBrXYJzPv589YeLSoz3Hhn0G7ZAuEb7BqLByelvoC3AKvp8IzyP'; // Sua URL do webhook do Discord
 
@@ -161,18 +161,20 @@ function getDeviceId() {
     return localStorage.getItem('playerName_' + id);
   }
   
-  // Ao carregar a página, verifica se já tem nome salvo
-  window.addEventListener('DOMContentLoaded', () => {
-    const savedName = getSavedPlayerName();
-    if (savedName) {
-      // Pula o painel de boas-vindas e inicia o jogo direto
-      document.getElementById('playerName').value = savedName;
-      document.getElementById('welcome-panel').classList.add('hidden');
-      document.getElementById('game-panel').classList.remove('hidden');
-      // Defina a variável global do nome do jogador, se necessário
-      window.currentPlayerName = savedName;
-    }
-  });
+    // Ao carregar a página, verifica se já tem nome salvo
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedName = getSavedPlayerName();
+        if (savedName) {
+            document.getElementById('playerName').value = savedName;
+            document.getElementById('welcome-panel').classList.add('hidden');
+            document.getElementById('game-panel').classList.remove('hidden');
+            currentPlayerName = savedName;
+        } else {
+            // Mostra o painel de visitante normalmente
+            document.getElementById('welcome-panel').classList.remove('hidden');
+            document.getElementById('game-panel').classList.add('hidden');
+        }
+    });
   
   // Quando o jogador clicar em "Começar Questões"
   document.getElementById('startGameBtn').addEventListener('click', () => {
@@ -339,7 +341,7 @@ updateRankingDisplay && updateRankingDisplay();
 window.addEventListener('beforeunload', () => {
     // Verificar se o nome do jogador foi definido (ou seja, o jogo foi iniciado)
     // E se houve pelo menos 1 acerto.
-    if (currentPlayerName !== 'Visitante' && streak > 0) {
+    if (currentPlayerName !== 1 && streak > 0) {
         saveToRanking(currentPlayerName, streak);
         sendDiscordWebhook(
             'Renan\'s Bot',
