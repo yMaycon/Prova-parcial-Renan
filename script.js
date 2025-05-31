@@ -73,6 +73,17 @@ async function sendDiscordWebhook(username, message, color = 0x6A05AD) {
 
 // --- Funções do Jogo ---
 
+document.getElementById('minusBtn').addEventListener('click', function() {
+    const answerInput = document.getElementById('answer');
+    let val = answerInput.value.trim();
+    if (val.startsWith('-')) {
+      answerInput.value = val.slice(1);
+    } else {
+      answerInput.value = '-' + val.replace(/^[-]+/, '');
+    }
+    answerInput.focus();
+  });
+
 function generateNumbers() {
 
     // Reabilita input e botão de verificar

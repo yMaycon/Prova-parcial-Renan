@@ -420,6 +420,22 @@ style="position: fixed; top: 0px; right: 0px; left: 0px; pointer-events: none; w
   filter: drop-shadow(0 0 10px rgba(255,165,0,0.8));
   transition: all 0.3s ease;
 }
+
+.btn-minus {
+  min-width: 2.2rem;
+  font-size: 1.5rem;
+  background: var(--secondary-bg, #eee);
+  color: var(--primary-brand, #222);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-right: 0.5rem;
+}
+.btn-minus:active {
+  background: #ddd;
+}
+
 .flame-inner {
   position: absolute;
   width: 100%;
