@@ -18,7 +18,23 @@ let correctSum = 0;
 let streak = 0;
 let currentPlayerName = null;
 let isVerifying = false; // NOVA VARIÁVEL DE ESTADO: impede múltiplas verificações
-const webhookUrl = 'https://discord.com/api/webhooks/1375958019686535168/XYy9vXOPE3c331zLjzBrXYJzPv589YeLSoz3Hhn0G7ZAuEb7BqLByelvoC3AKvp8IzyP'; // Sua URL do webhook do Discord
+const webhookUrl = 'https://discord.com/api/webhooks/1379234880465932360/uGPWgSOv0TuqkBL5Ldb65mi6n6e572iGGQ8fc1JGJFGZ2pK8xpl92_xmcrzxQMbHyFIc'; // Sua URL do webhook do Discord
+
+// Carrega o SDK do Supabase dinamicamente
+const supabaseScript = document.createElement('script');
+supabaseScript.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js";
+supabaseScript.onload = () => {
+  // Inicializa o Supabase após o SDK ser carregado
+  const supabaseUrl = 'postgresql://postgres:Roberto3213aa!!@db.shdhdcexfccmsxuuzvms.supabase.co:5432/postgres'; // Substitua pelo seu
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoZGhkY2V4ZmNjbXN4dXV6dm1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NTg3NDMsImV4cCI6MjA2NDIzNDc0M30.KCbhhIozxsfPMCuOr5SQ0LGZRWfIWCB-5UmomWTyg94'; // Substitua pelo seu
+  window.supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  // Agora chame funções que usam supabase
+  // Exemplo: updateRankingDisplay();
+};
+document.head.appendChild(supabaseScript);
+
+console.log('Supabase carregado:', window.supabase);
 
 // --- Sons ---
 // Se Howler.js não carregar, essas variáveis serão undefined.
@@ -111,21 +127,59 @@ function generateNumbers() {
     }, 5000); // 5000 milissegundos = 5 segundos
 }
 
-function saveToRanking(name, score) {
-    let ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
-    const idx = ranking.findIndex(item => item.name === name);
-    if (idx !== -1) {
-        // Se a nova pontuação for maior, atualiza
-        if (score > ranking[idx].score) {
-            ranking[idx].score = score;
-        }
-    } else {
-        ranking.push({ name, score });
+async function saveToRanking(name, score) {
+    try {
+      const { data: existing, error: fetchError } = await supabase
+        .from('ranking')
+        .select('score')
+        .eq('name', name)
+        .single();
+  
+      if (fetchError && fetchError.message && fetchError.message.includes('relation "ranking" does not exist')) {
+        alert('A tabela "ranking" não existe no Supabase. Crie-a manualmente no painel do Supabase!');
+        return;
+      }
+  
+      if (!existing) {
+        await supabase.from('ranking').insert([{ name, score }]);
+      } else if (score > existing.score) {
+        await supabase.from('ranking').update({ score }).eq('name', name);
+      }
+    } catch (err) {
+      alert('Erro ao acessar o ranking: ' + err.message);
     }
-    ranking.sort((a, b) => b.score - a.score);
-    ranking = ranking.slice(0, 10); // Top 10
-    localStorage.setItem('ranking', JSON.stringify(ranking));
+  }
+  
+  async function fetchRanking() {
+    try {
+      const { data, error } = await supabase
+        .from('ranking')
+        .select('*')
+        .order('score', { ascending: false })
+        .limit(10);
+  
+      if (error && error.message && error.message.includes('relation "ranking" does not exist')) {
+        alert('A tabela "ranking" não existe no Supabase. Crie-a manualmente no painel do Supabase!');
+        return [];
+      }
+      return data || [];
+    } catch (err) {
+      alert('Erro ao acessar o ranking: ' + err.message);
+      return [];
+    }
+  }
+
+// Atualizar ranking na tela
+async function updateRankingDisplay() {
+  const ranking = await fetchRanking();
+  const rankingList = document.getElementById('ranking-list');
+  rankingList.innerHTML = ranking.map((item, i) =>
+    `<li><strong>${i + 1}º</strong> ${item.name} — <b>${item.score}</b> pts</li>`
+  ).join('') || '<li>Nenhum registro ainda.</li>';
 }
+
+// Atualizar ranking periodicamente (exemplo: a cada 5 segundos)
+setInterval(updateRankingDisplay, 5000);
 
 // Função para mostrar o ranking
 function showRanking() {
@@ -324,18 +378,6 @@ playerNameInput.addEventListener('keypress', (event) => {
         startGameBtn.click(); // Simula o clique no botão de iniciar
     }
 });
-
-function updateRankingDisplay() {
-    const rankingList = document.getElementById('ranking-list');
-    const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
-    rankingList.innerHTML = ranking.map((item, i) =>
-        `<li><strong>${i + 1}º</strong> ${item.name} — <b>${item.score}</b> pts</li>`
-    ).join('') || '<li>Nenhum registro ainda.</li>';
-}
-
-// Quando salvar a pontuação:
-saveToRanking(currentPlayerName, streak);
-updateRankingDisplay && updateRankingDisplay();
 
 // --- Lógica para "finalizar" o jogo e enviar a pontuação (Este webhook ainda permanece) ---
 window.addEventListener('beforeunload', () => {

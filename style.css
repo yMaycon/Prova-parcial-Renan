@@ -298,88 +298,12 @@ input[type="number"]:focus {
   100% { transform: scale(1); opacity: 1; }
 }
 
-/*.flame-section {
-  position: absolute;
-  bottom: 0;
-  right: 40%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 550px;
-  padding: clamp(0.8rem, 3vmin, 1.5rem);
-  top: 320px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(0.5rem, 2vmin, 1.2rem);
-  margin-top: clamp(0.8rem, 3vmin, 2rem);
-}
-
-
-
-
-.flame-container {
-  width: clamp(55px, 15vmin, 100px);
-  height: clamp(55px, 15vmin, 100px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flame {
-  width: clamp(45px, 12vmin, 90px);
-  height: clamp(45px, 12vmin, 90px);
-  position: relative;
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-  transform-origin: center bottom;
-  will-change: width, height, filter;
-}
-
-.flame::after {
-  content: '🔥';
-  position: absolute;
-  font-size: clamp(1.6rem, 10vw, 4rem);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  filter: drop-shadow(0 0 10px rgba(255,165,0,0.8));
-  transition: all 0.3s ease;
-}
-
-.flame-inner {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, rgba(255, 200, 0, 0.9) 0%, rgba(255, 100, 0, 0.7) 30%, rgba(255, 0, 0, 0.4) 60%, transparent 100%);
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    filter: blur(8px);
-    opacity: 0.9;
-    animation: pulse 1.5s ease-in-out infinite alternate;
-}
-
-@keyframes pulse {
-    0% { transform: scale(0.95); opacity: 0.85; }
-    50% { transform: scale(1.05); opacity: 1; }
-    100% { transform: scale(0.95); opacity: 0.85; }
-}
-
-.streak-counter {
-  font-weight: 700;
-  color: var(--primary-brand);
-  font-size: clamp(0.8rem, 3.5vw, 1.5rem);
-  letter-spacing: 0.5px;
-}*/
-
-/*Altere do flame.section até o .streak-counter:
-
-quero que o flame.section tenha essas atribuições:
-style="position: fixed; top: 0px; right: 0px; left: 0px; pointer-events: none; width: auto; height: 3px; opacity: 0; background: repeating-linear-gradient(to right, rgb(0, 165, 219) 0%, rgb(0, 123, 255) 100%); transform: scaleX(0); transform-origin: left center; transition: transform 0.1s, height 0.4s, opacity 0.4s; z-index: 999999;"*/
-
 #flame {
   position: fixed;
   left: 75vw;
-  top: 75vh;
-  width: 60px;
-  height: 60px;
+  top: 40vh;
+  width: clamp(48px, 8vw, 96px);   /* Nunca menor que 48px, nunca maior que 96px */
+  height: clamp(48px, 8vw, 96px);
   z-index: 9999;
   pointer-events: none;
   animation: flyFlame 2s linear infinite alternate;
@@ -434,15 +358,17 @@ style="position: fixed; top: 0px; right: 0px; left: 0px; pointer-events: none; w
 
 .streak-counter {
   position: fixed;
-  left: calc(75vw + 16px); /* metade da largura da chama */
-  top: calc(75vh + 62px);  /* 60px + 2px */
-  transform: translateX(-50%);
-  z-index: 9999;
   color: var(--primary-brand);
-  font-size: clamp(1.3rem, 5.0vw, 3.0rem);
+  font-size: clamp(1.8rem, 5vw, 1.5rem);
   font-weight: bold;
-  text-align: center;
-  width: max-content;
+  text-align: left;
+  width: clamp(48px, 8vw, 96px);   /* Nunca menor que 48px, nunca maior que 96px */
+  height: clamp(48px, 8vw, 96px);
+  z-index: 9999;
+  pointer-events: none;
+  background: none;
+  left: 78vw;
+  top: 48vh;
   animation: flyFlame 2s linear infinite alternate;
 }
 
